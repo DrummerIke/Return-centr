@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G7 — Центр возвратов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --bg1:#4b403d; --bg2:#2e2826; --bg3:#211c1a;
+      --panel:#3a3330; --panel-soft:#342d2b;
+      --line:rgba(255,255,255,.08); --line-strong:rgba(239,111,46,.35);
+      --text:#f5f1ef; --muted:#b8ada7;
+      --accent:#ef6f2e; --accent-2:#ff8d55;
+      --accent-soft:rgba(239,111,46,.12);
+      --success:#3fc38a; --danger:#ff6d6d;
+      --shadow:0 18px 44px rgba(0,0,0,.42);
+      --radius-xl:24px; --radius-lg:18px; --radius-md:14px;
+    }
+    html,body{margin:0;padding:0}
+    body{
+      font-family:'Nunito',sans-serif;
+      background:radial-gradient(circle at top, var(--bg1) 0%, var(--bg2) 45%, var(--bg3) 100%);
+      color:var(--text);
+      padding:16px;
+    }
+    .app{max-width:1560px;margin:0 auto}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:var(--accent-soft);border:1px solid rgba(239,111,46,.45);
+      color:#ffbf98;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase
+    }
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(239,111,46,.85)}
+    .top-title{text-align:right}
+    .top-title h1{margin:0;font-size:28px;line-height:1.05}
+    .top-title p{margin:5px 0 0;color:var(--muted);font-size:13px}
+
+    .layout{display:grid;grid-template-columns:330px 1fr;gap:14px}
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow);
+      overflow:hidden;min-height:920px
+    }
+    .sidebar{padding:16px}
+    .section{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px;margin-bottom:12px}
+    .section:last-child{margin-bottom:0}
+    .eyebrow{
+      font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#ffbf98;margin-bottom:10px
+    }
+
+    .primary-stack{display:grid;gap:10px}
+    .action-card{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      width:100%;text-align:left;padding:15px 16px;border-radius:18px;border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(239,111,46,.14), rgba(239,111,46,.08));color:#fff;
+      cursor:pointer;transition:.18s ease;font:800 15px 'Nunito',sans-serif
+    }
+    .action-card:hover{transform:translateY(-1px);border-color:rgba(239,111,46,.65);background:linear-gradient(180deg, rgba(239,111,46,.2), rgba(239,111,46,.1))}
+    .action-card .mini{display:block;font-size:12px;color:#ffcfb3;font-weight:700;margin-top:3px}
+
+    .tabs{display:grid;gap:10px}
+    .tab-btn{
+      width:100%;text-align:left;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);
+      background:var(--panel);color:#fff;cursor:pointer;transition:.18s ease;font:800 15px 'Nunito',sans-serif;text-decoration:none
+    }
+    .tab-btn:hover{transform:translateY(-1px);border-color:var(--line-strong);background:#433936}
+    .tab-btn.active{
+      background:linear-gradient(180deg, rgba(239,111,46,.2), rgba(239,111,46,.12));
+      border-color:rgba(239,111,46,.8);box-shadow:0 0 0 1px rgba(239,111,46,.3) inset
+    }
+
+    .hero{
+      display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+      background:linear-gradient(135deg, rgba(239,111,46,.13), rgba(255,255,255,.02));
+      border:1px solid var(--line);border-radius:var(--radius-xl);padding:18px;box-shadow:var(--shadow);
+      margin-bottom:14px
+    }
+    .hero h2{margin:0 0 8px;font-size:26px}
+    .hero p{margin:0;color:#cfc5c0;line-height:1.55;max-width:860px}
+    .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      min-height:46px;padding:12px 18px;border-radius:999px;border:none;
+      font:800 14px 'Nunito',sans-serif;cursor:pointer;transition:.18s ease;text-decoration:none
+    }
+    .btn-primary{background:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--accent-2);transform:translateY(-1px);box-shadow:0 0 16px rgba(239,111,46,.35)}
+    .btn-secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+    .btn-secondary:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
+    .btn-ghost{background:var(--panel);color:#fff;border:1px solid rgba(255,255,255,.08)}
+    .btn-ghost:hover{background:#463c39}
+    .btn-small{min-height:38px;padding:9px 14px;font-size:13px}
+
+    .content-card{
+      background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+      border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow);overflow:hidden
+    }
+    .content-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid var(--line)}
+    .content-head h3{margin:0;font-size:22px}
+    .content-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
+    .content-body{padding:18px}
+    .hidden{display:none!important}
+
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    .label{font-size:13px;font-weight:800;color:#dfd5d1}
+    input, select, textarea{
+      width:100%;border:1px solid rgba(255,255,255,.08);background:var(--panel);color:#fff;
+      border-radius:14px;padding:13px 14px;font:600 14px 'Nunito',sans-serif;outline:none;transition:.18s ease
+    }
+    textarea{min-height:120px;resize:vertical}
+    input::placeholder, textarea::placeholder{color:#a99d98}
+    input:focus, select:focus, textarea:focus{
+      border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:#433936
+    }
+    .field-note{font-size:12px;color:var(--muted);line-height:1.45}
+    .status-row{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:16px
+    }
+    .status-text{font-size:14px;color:#e5dcd8}
+    .ok{color:var(--success)} .err{color:var(--danger)}
+
+    .table-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .search-box{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .search-box input{min-width:260px}
+    .table-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:18px;overflow:auto}
+    table{width:100%;border-collapse:collapse;min-width:980px}
+    thead{background:linear-gradient(90deg, rgba(239,111,46,.22), rgba(255,255,255,.02))}
+    th, td{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top}
+    th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#ffbf98}
+    td{font-size:14px;color:#f2ece9}
+    tr:hover td{background:rgba(255,255,255,.02)}
+    .pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}
+    .pill.new{background:rgba(63,195,138,.14);color:#80e4b5}
+    .pill.progress{background:rgba(239,111,46,.14);color:#ffbf98}
+    .pill.done{background:rgba(255,255,255,.1);color:#ece2dd}
+
+    .instruction-layout{display:grid;grid-template-columns:320px 1fr;gap:14px}
+    .choice-list{display:grid;gap:10px}
+    .choice{
+      width:100%;border:1px solid rgba(255,255,255,.08);background:var(--panel);color:#fff;
+      padding:13px 12px;border-radius:14px;font:700 14px 'Nunito',sans-serif;cursor:pointer;transition:.18s ease;text-align:left
+    }
+    .choice:hover{border-color:var(--line-strong);background:#433936;transform:translateY(-1px)}
+    .choice.active{
+      background:linear-gradient(180deg, rgba(239,111,46,.18), rgba(239,111,46,.12));
+      border-color:rgba(239,111,46,.7);box-shadow:0 0 0 1px rgba(239,111,46,.35) inset
+    }
+    .pdf-shell{background:#1d1918;border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:720px;position:relative}
+    .pdf-toolbar{
+      display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
+      padding:12px 14px;border-bottom:1px solid var(--line);background:#2a2422
+    }
+    .toolbar-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .toolbar-btn{
+      min-width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:var(--panel);
+      color:#fff;font:800 16px 'Nunito',sans-serif;cursor:pointer;transition:.18s ease
+    }
+    .toolbar-btn:hover{background:#463c39;border-color:rgba(239,111,46,.4)}
+    .pdf-scroll{height:760px;overflow:auto;padding:18px;background:#2b2624}
+    .pdf-pages{display:flex;flex-direction:column;gap:18px;align-items:center}
+    .pdf-page{display:block;background:#fff;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .empty{min-height:720px;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;color:#c1b6b0;line-height:1.6}
+    .empty-inner{max-width:560px}
+    .empty-title{font-size:24px;font-weight:800;color:#fff4ef;margin-bottom:8px}
+    .loading{
+      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(29,25,24,.72);
+      backdrop-filter:blur(2px);z-index:3;font-size:16px;font-weight:800;color:#fff4ef
+    }
+
+    @media (max-width:1180px){
+      .layout{grid-template-columns:1fr}
+      .panel{min-height:auto}
+      .instruction-layout{grid-template-columns:1fr}
+      .pdf-scroll{height:620px}
+      .hero{flex-direction:column}
+    }
+    @media (max-width:760px){
+      body{padding:12px}
+      .top-title h1{font-size:22px}
+      .form-grid{grid-template-columns:1fr}
+      .pdf-scroll{height:520px;padding:10px}
+      .content-head{flex-direction:column;align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="badge"><span class="dot"></span><span>G7</span></div>
+      <div class="top-title">
+        <h1>Центр возвратов</h1>
+        <p>Оформление заявок, контроль статусов и инструкции — в одном рабочем модуле</p>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="panel sidebar">
+        <div class="section">
+          <div class="eyebrow">Основные действия</div>
+          <div class="primary-stack">
+            <button class="action-card" data-tab="create">
+              <span>
+                Создать возврат
+                <span class="mini">Новая заявка в реестр</span>
+              </span>
+              <span>→</span>
+            </button>
+            <button class="action-card" data-tab="tracking">
+              <span>
+                Отследить возврат
+                <span class="mini">Самые свежие сверху</span>
+              </span>
+              <span>→</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">Дополнительно</div>
+          <div class="tabs">
+            <button class="tab-btn" data-tab="instructions">Инструкции</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="eyebrow">Резервная ссылка</div>
+          <div class="tabs">
+            <a class="tab-btn" id="openTableExternal" href="#" target="_blank" rel="noopener noreferrer">Открыть таблицу отдельно</a>
+          </div>
+        </div>
+      </aside>
+
+      <main>
+        <div class="hero">
+          <div>
+            <h2 id="heroTitle">Создать возврат</h2>
+            <p id="heroText">Короткая премиальная форма, которая пишет данные в ту же таблицу и по тем же параметрам, без лишних полей.</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-ghost btn-small" id="heroAction1">Очистить форму</button>
+            <button class="btn btn-secondary btn-small" id="heroAction2">Открыть таблицу</button>
+          </div>
+        </div>
+
+        <section class="content-card hidden" id="tab-instructions">
+          <div class="content-head">
+            <div>
+              <h3>Навигатор инструкций</h3>
+              <p>Пошаговый выбор сценария с полноразмерным просмотром PDF.</p>
+            </div>
+          </div>
+          <div class="content-body">
+            <div class="instruction-layout">
+              <div>
+                <div class="section" style="margin-bottom:12px">
+                  <div class="eyebrow">1. Тип обращения</div>
+                  <div class="choice-list" id="categoryChoices"></div>
+                </div>
+
+                <div class="section hidden" id="returnObjectCard" style="margin-bottom:12px">
+                  <div class="eyebrow">2. Что возвращаем?</div>
+                  <div class="choice-list" id="returnObjectChoices"></div>
+                </div>
+
+                <div class="section hidden" id="logisticsCard" style="margin-bottom:12px">
+                  <div class="eyebrow">Следующий шаг</div>
+                  <div class="choice-list" id="logisticsChoices"></div>
+                </div>
+
+                <div class="section hidden" id="paymentCard" style="margin-bottom:12px">
+                  <div class="eyebrow">Тип оплаты</div>
+                  <div class="choice-list" id="paymentChoices"></div>
+                </div>
+
+                <div class="section hidden" id="giftTypeCard" style="margin-bottom:12px">
+                  <div class="eyebrow">Тип подарочной карты</div>
+                  <div class="choice-list" id="giftTypeChoices"></div>
+                </div>
+
+                <div class="section hidden" id="giftReasonCard">
+                  <div class="eyebrow">Ситуация по ЭПК</div>
+                  <div class="choice-list" id="giftReasonChoices"></div>
+                </div>
+              </div>
+
+              <div class="pdf-shell">
+                <div class="pdf-toolbar hidden" id="pdfToolbar">
+                  <div class="toolbar-group">
+                    <button class="toolbar-btn" id="prevPageBtn">‹</button>
+                    <div style="font-size:13px;color:var(--muted);font-weight:700">Страница <span id="pageNum">0</span> / <span id="pageCount">0</span></div>
+                    <button class="toolbar-btn" id="nextPageBtn">›</button>
+                  </div>
+                  <div class="toolbar-group">
+                    <button class="toolbar-btn" id="zoomOutBtn">−</button>
+                    <div style="font-size:13px;color:var(--muted);font-weight:700"><span id="zoomValue">100%</span></div>
+                    <button class="toolbar-btn" id="zoomInBtn">+</button>
+                    <button class="toolbar-btn" id="fitWidthBtn">↔</button>
+                  </div>
+                </div>
+
+                <div class="loading hidden" id="loadingLayer">Загружаем PDF…</div>
+
+                <div class="empty" id="emptyState">
+                  <div class="empty-inner">
+                    <div class="empty-title">Инструкция появится здесь</div>
+                    <div>Выберите тип обращения и уточняющие параметры. После этого система откроет нужный PDF прямо на странице.</div>
+                  </div>
+                </div>
+
+                <div class="pdf-scroll hidden" id="pdfScroll">
+                  <div class="pdf-pages" id="pdfPages"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-card" id="tab-create">
+          <div class="content-head">
+            <div>
+              <h3>Создать возврат</h3>
+              <p>Короткая форма: сотрудник, заказ, тип возврата, комментарий — и дополнительные поля только для частичного возврата.</p>
+            </div>
+          </div>
+          <div class="content-body">
+            <form id="returnForm">
+              <div class="form-grid">
+                <div class="field">
+                  <label class="label" for="employeeName">ФИО сотрудника</label>
+                  <input id="employeeName" name="employeeName" type="text" placeholder="Например: Примеров П.П." required />
+                </div>
+
+                <div class="field">
+                  <label class="label" for="orderNumber">Номер заказа</label>
+                  <input id="orderNumber" name="orderNumber" type="text" placeholder="Например: 22398621" required />
+                </div>
+
+                <div class="field">
+                  <label class="label" for="returnType">Тип возврата</label>
+                  <select id="returnType" name="returnType" required>
+                    <option value="">Выберите вариант</option>
+                    <option value="Полный">Полный</option>
+                    <option value="Частичный">Частичный</option>
+                  </select>
+                </div>
+
+                <div class="field hidden" id="refundAmountField">
+                  <label class="label" for="refundAmount">Сумма возврата</label>
+                  <input id="refundAmount" name="refundAmount" type="text" placeholder="Только цифры" />
+                </div>
+
+                <div class="field full hidden" id="positionsField">
+                  <label class="label" for="positions">Позиции к возврату</label>
+                  <textarea id="positions" name="positions" placeholder="Название позиции и количество к возврату"></textarea>
+                </div>
+
+                <div class="field full">
+                  <label class="label" for="comment">Дополнительный комментарий</label>
+                  <textarea id="comment" name="comment" placeholder="Если требуется: причина, детали, ссылки, пояснения"></textarea>
+                </div>
+              </div>
+
+              <div class="status-row">
+                <div class="status-text" id="formStatus">Заполните форму. После отправки запись появится в той же таблице, а в разделе отслеживания — сверху списка.</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button class="btn btn-ghost" type="button" id="clearFormBtn">Очистить</button>
+                  <button class="btn btn-primary" type="submit" id="submitReturnBtn">Создать возврат</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <section class="content-card hidden" id="tab-tracking">
+          <div class="content-head">
+            <div>
+              <h3>Отследить возврат</h3>
+              <p>Реестр возвратов из той же таблицы. Свежие записи выводятся сверху автоматически.</p>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn btn-ghost btn-small" id="refreshTableBtn">Обновить</button>
+              <a class="btn btn-secondary btn-small" id="openTableBtnInner" href="#" target="_blank" rel="noopener noreferrer">Открыть таблицу отдельно</a>
+            </div>
+          </div>
+          <div class="content-body">
+            <div class="table-tools">
+              <div class="search-box">
+                <input id="searchReturns" type="text" placeholder="Поиск по заказу, сотруднику, позиции, сумме или комментарию" />
+              </div>
+              <div style="font-size:13px;color:var(--muted)" id="tableMeta">Записей: 0</div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Дата</th>
+                    <th>Сотрудник</th>
+                    <th>Заказ</th>
+                    <th>Тип</th>
+                    <th>Статус</th>
+                    <th>Сумма</th>
+                    <th>Позиции</th>
+                    <th>Комментарий</th>
+                  </tr>
+                </thead>
+                <tbody id="returnsTableBody">
+                  <tr><td colspan="8" style="color:var(--muted)">Загрузка данных…</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+<script type="module">
+  import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs";
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs";
+
+  const CONFIG = {
+    APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyi6JGaqNvwMWZXS5eLKzIXp-NacimlIb2QI289_lfOIAl6YadtRq3E1nYgSLakhNAb/exec",
+    RETURNS_SHEET_URL: "https://docs.google.com/spreadsheets/d/1wJFMO690kzUVDzcJiJCrH3fi448ojdnZi07bRZjj5Aw/edit?gid=59196493#gid=59196493",
+    INSTRUCTION_BASE_URL: "https://mhtbolnovisgdliphsmf.supabase.co/storage/v1/object/public/Instruction/"
+  };
+
+  const topActionCards = document.querySelectorAll(".action-card");
+  const tabs = document.querySelectorAll(".tab-btn");
+  const sections = {
+    instructions: document.getElementById("tab-instructions"),
+    create: document.getElementById("tab-create"),
+    tracking: document.getElementById("tab-tracking")
+  };
+
+  const heroTitle = document.getElementById("heroTitle");
+  const heroText = document.getElementById("heroText");
+  const heroAction1 = document.getElementById("heroAction1");
+  const heroAction2 = document.getElementById("heroAction2");
+  const openTableExternal = document.getElementById("openTableExternal");
+  const openTableBtnInner = document.getElementById("openTableBtnInner");
+  openTableExternal.href = CONFIG.RETURNS_SHEET_URL;
+  openTableBtnInner.href = CONFIG.RETURNS_SHEET_URL;
+
+  function activateTabsVisual(name){
+    tabs.forEach(btn => btn.classList.toggle("active", btn.dataset.tab === name));
+  }
+
+  function setTab(name){
+    activateTabsVisual(name === "instructions" ? "instructions" : "");
+    Object.keys(sections).forEach(key => sections[key].classList.toggle("hidden", key !== name));
+
+    if(name === "create"){
+      heroTitle.textContent = "Создать возврат";
+      heroText.textContent = "Короткая премиальная форма, которая пишет данные в ту же таблицу и по тем же параметрам, без лишних полей.";
+      heroAction1.textContent = "Очистить форму";
+      heroAction1.onclick = () => document.getElementById("clearFormBtn").click();
+      heroAction2.textContent = "Открыть таблицу";
+      heroAction2.onclick = () => window.open(CONFIG.RETURNS_SHEET_URL, "_blank");
+    }
+
+    if(name === "tracking"){
+      heroTitle.textContent = "Отследить возврат";
+      heroText.textContent = "Да — здесь выводятся данные из той же таблицы, и самые свежие записи всегда стоят сверху.";
+      heroAction1.textContent = "Обновить реестр";
+      heroAction1.onclick = () => loadReturns();
+      heroAction2.textContent = "Открыть таблицу";
+      heroAction2.onclick = () => window.open(CONFIG.RETURNS_SHEET_URL, "_blank");
+    }
+
+    if(name === "instructions"){
+      heroTitle.textContent = "Инструкции";
+      heroText.textContent = "Инструкция вынесена вниз по приоритету: она остается под рукой, но не мешает основным действиям.";
+      heroAction1.textContent = "Открыть PDF";
+      heroAction1.onclick = () => {
+        const s = instructionState.currentKey ? SCENARIOS[instructionState.currentKey] : null;
+        if (s) window.open(s.url, "_blank");
+      };
+      heroAction2.textContent = "Копировать ссылку";
+      heroAction2.onclick = async () => {
+        const s = instructionState.currentKey ? SCENARIOS[instructionState.currentKey] : null;
+        if (!s) return;
+        try { await navigator.clipboard.writeText(s.url); heroText.textContent = "Ссылка на инструкцию скопирована."; } catch(e) {}
+      };
+    }
+
+    localStorage.setItem("g7_returns_active_tab_v3", name);
+  }
+
+  topActionCards.forEach(btn => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
+  tabs.forEach(btn => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
+
+  const DATA = {
+    category: [
+      { value: "exchange", label: "Обмен" },
+      { value: "return", label: "Возврат" },
+      { value: "service_quality", label: "Проверка качества" },
+      { value: "service_repair", label: "Ремонт по гарантии" }
+    ],
+    returnObject: [
+      { value: "product", label: "Товар" },
+      { value: "gift_card", label: "Подарочная карта" }
+    ],
+    logistics: [
+      { value: "courier", label: "Наша доставка / курьер" },
+      { value: "region_tk", label: "Регион / доставка ТК" }
+    ],
+    payment: [
+      { value: "online", label: "Оплата онлайн" },
+      { value: "on_delivery", label: "Оплата при получении" },
+      { value: "e_gift_card", label: "Оплачено ЭПК" },
+      { value: "physical_gift_card_plus_extra", label: "Физическая ПК + доплата" },
+      { value: "legal_entity_transfer", label: "Юр. лицо / безнал" }
+    ],
+    giftType: [
+      { value: "physical", label: "Физическая подарочная карта" },
+      { value: "electronic", label: "Электронная подарочная карта" }
+    ],
+    giftReason: [
+      { value: "recipient_request", label: "Возврат по запросу получателя" },
+      { value: "partial_refund", label: "Частичный возврат / неполное отоваривание" }
+    ]
+  };
+
+  const SCENARIOS = {
+    exchange_courier: { title: "Обмен — наша доставка", description: "Сценарий обмена товара при нашей доставке или курьерской логистике.", file: "exchange_product_courier.pdf" },
+    exchange_region_tk: { title: "Обмен — регион / доставка ТК", description: "Сценарий обмена товара в регионах при доставке транспортной компанией.", file: "exchange_product_region_transport_company.pdf" },
+    return_courier_online: { title: "Возврат товара — наша доставка / оплата онлайн", description: "Возврат товара при нашей доставке, если заказ был оплачен онлайн.", file: "return_product_online_payment_courier.pdf" },
+    return_courier_on_delivery: { title: "Возврат товара — наша доставка / оплата при получении", description: "Возврат товара при нашей доставке, если оплата была при получении.", file: "return_product_cash_or_card_on_delivery_courier.pdf" },
+    return_courier_e_gift_card: { title: "Возврат товара — наша доставка / оплачено ЭПК", description: "Возврат товара, если заказ был оплачен электронной подарочной картой.", file: "return_product_e_gift_card_courier.pdf" },
+    return_courier_physical_gift_card_plus_extra: { title: "Возврат товара — физическая ПК + доплата", description: "Возврат товара, если использовалась физическая подарочная карта и дополнительная оплата.", file: "return_product_physical_gift_card_plus_extra_payment_courier.pdf" },
+    return_courier_legal_entity_transfer: { title: "Возврат товара — юр. лицо / безнал", description: "Возврат товара по безналичной оплате для юридического лица.", file: "return_product_bank_transfer_legal_entity_courier.pdf" },
+    return_region_tk: { title: "Возврат товара — регион / доставка ТК", description: "Возврат товара в регионах при доставке транспортной компанией.", file: "return_product_region_transport_company.pdf" },
+    return_gift_card_physical: { title: "Возврат — физическая подарочная карта", description: "Инструкция по возврату физической подарочной карты.", file: "return_gift_card_physical_refund.pdf" },
+    return_gift_card_electronic_recipient_request: { title: "Возврат — электронная подарочная карта / запрос получателя", description: "Инструкция для возврата электронной подарочной карты по запросу получателя.", file: "return_e_gift_card_recipient_request.pdf" },
+    return_gift_card_electronic_partial: { title: "Возврат — электронная подарочная карта / частичный возврат", description: "Инструкция для частичного возврата или неполного отоваривания по электронной подарочной карте.", file: "return_e_gift_card_partial_refund.pdf" },
+    service_quality_courier: { title: "Проверка качества — наша доставка", description: "Сценарий проверки качества при нашей доставке или курьерском получении.", file: "service_quality_check_courier_pickup.pdf" },
+    service_quality_region_tk: { title: "Проверка качества — регион / доставка ТК", description: "Сценарий проверки качества для регионов и транспортной компании.", file: "service_quality_check_region_transport_company.pdf" },
+    service_repair_courier: { title: "Ремонт по гарантии — наша доставка", description: "Сценарий гарантийного ремонта при нашей доставке или курьерской логистике.", file: "service_warranty_repair_courier_pickup.pdf" },
+    service_repair_region_tk: { title: "Ремонт по гарантии — регион / доставка ТК", description: "Сценарий гарантийного ремонта для регионов и транспортной компании.", file: "service_warranty_repair_region_transport_company.pdf" }
+  };
+  for (const key in SCENARIOS) SCENARIOS[key].url = CONFIG.INSTRUCTION_BASE_URL + SCENARIOS[key].file;
+
+  const instructionState = { category:"", returnObject:"", logistics:"", payment:"", giftType:"", giftReason:"", currentKey:"", pdfDoc:null, scale:1, pageNum:1, fitWidth:true };
+  const ic = {
+    categoryChoices: document.getElementById("categoryChoices"),
+    returnObjectCard: document.getElementById("returnObjectCard"),
+    returnObjectChoices: document.getElementById("returnObjectChoices"),
+    logisticsCard: document.getElementById("logisticsCard"),
+    logisticsChoices: document.getElementById("logisticsChoices"),
+    paymentCard: document.getElementById("paymentCard"),
+    paymentChoices: document.getElementById("paymentChoices"),
+    giftTypeCard: document.getElementById("giftTypeCard"),
+    giftTypeChoices: document.getElementById("giftTypeChoices"),
+    giftReasonCard: document.getElementById("giftReasonCard"),
+    giftReasonChoices: document.getElementById("giftReasonChoices"),
+    pdfToolbar: document.getElementById("pdfToolbar"),
+    prevPageBtn: document.getElementById("prevPageBtn"),
+    nextPageBtn: document.getElementById("nextPageBtn"),
+    zoomOutBtn: document.getElementById("zoomOutBtn"),
+    zoomInBtn: document.getElementById("zoomInBtn"),
+    fitWidthBtn: document.getElementById("fitWidthBtn"),
+    pageNum: document.getElementById("pageNum"),
+    pageCount: document.getElementById("pageCount"),
+    zoomValue: document.getElementById("zoomValue"),
+    loadingLayer: document.getElementById("loadingLayer"),
+    emptyState: document.getElementById("emptyState"),
+    pdfScroll: document.getElementById("pdfScroll"),
+    pdfPages: document.getElementById("pdfPages")
+  };
+
+  function renderButtons(container, items, stateKey){
+    container.innerHTML = "";
+    items.forEach(item => {
+      const btn = document.createElement("button");
+      btn.className = "choice" + (instructionState[stateKey] === item.value ? " active" : "");
+      btn.type = "button";
+      btn.textContent = item.label;
+      btn.addEventListener("click", () => setInstructionState(stateKey, item.value));
+      container.appendChild(btn);
+    });
+  }
+
+  function setInstructionState(key, value){
+    instructionState[key] = value;
+    if (key === "category") { instructionState.returnObject=""; instructionState.logistics=""; instructionState.payment=""; instructionState.giftType=""; instructionState.giftReason=""; }
+    if (key === "returnObject") { instructionState.logistics=""; instructionState.payment=""; instructionState.giftType=""; instructionState.giftReason=""; }
+    if (key === "logistics") instructionState.payment="";
+    if (key === "giftType") instructionState.giftReason="";
+    updateInstructionUI();
+  }
+
+  function hide(node){node.classList.add("hidden")}
+  function show(node){node.classList.remove("hidden")}
+
+  function resolveInstructionKey(){
+    if (instructionState.category === "exchange") {
+      if (instructionState.logistics === "courier") return "exchange_courier";
+      if (instructionState.logistics === "region_tk") return "exchange_region_tk";
+    }
+    if (instructionState.category === "return") {
+      if (instructionState.returnObject === "product") {
+        if (instructionState.logistics === "region_tk") return "return_region_tk";
+        if (instructionState.logistics === "courier") {
+          if (instructionState.payment === "online") return "return_courier_online";
+          if (instructionState.payment === "on_delivery") return "return_courier_on_delivery";
+          if (instructionState.payment === "e_gift_card") return "return_courier_e_gift_card";
+          if (instructionState.payment === "physical_gift_card_plus_extra") return "return_courier_physical_gift_card_plus_extra";
+          if (instructionState.payment === "legal_entity_transfer") return "return_courier_legal_entity_transfer";
+        }
+      }
+      if (instructionState.returnObject === "gift_card") {
+        if (instructionState.giftType === "physical") return "return_gift_card_physical";
+        if (instructionState.giftType === "electronic") {
+          if (instructionState.giftReason === "recipient_request") return "return_gift_card_electronic_recipient_request";
+          if (instructionState.giftReason === "partial_refund") return "return_gift_card_electronic_partial";
+        }
+      }
+    }
+    if (instructionState.category === "service_quality") {
+      if (instructionState.logistics === "courier") return "service_quality_courier";
+      if (instructionState.logistics === "region_tk") return "service_quality_region_tk";
+    }
+    if (instructionState.category === "service_repair") {
+      if (instructionState.logistics === "courier") return "service_repair_courier";
+      if (instructionState.logistics === "region_tk") return "service_repair_region_tk";
+    }
+    return "";
+  }
+
+  function getInstructionNeedText(){
+    if (!instructionState.category) return "Инструкция вынесена вниз по приоритету: она остается под рукой, но не мешает основным действиям.";
+    if (instructionState.category === "exchange" && !instructionState.logistics) return "Уточните логистику для обмена.";
+    if (instructionState.category === "return") {
+      if (!instructionState.returnObject) return "Уточните, что возвращаем: товар или подарочную карту.";
+      if (instructionState.returnObject === "product") {
+        if (!instructionState.logistics) return "Выберите способ логистики для возврата товара.";
+        if (instructionState.logistics === "courier" && !instructionState.payment) return "Выберите тип оплаты.";
+      }
+      if (instructionState.returnObject === "gift_card") {
+        if (!instructionState.giftType) return "Выберите тип подарочной карты.";
+        if (instructionState.giftType === "electronic" && !instructionState.giftReason) return "Уточните ситуацию по электронной подарочной карте.";
+      }
+    }
+    if ((instructionState.category === "service_quality" || instructionState.category === "service_repair") && !instructionState.logistics) return "Уточните способ логистики.";
+    return "Сценарий не найден.";
+  }
+
+  function toggleInstructionCards(){
+    hide(ic.returnObjectCard); hide(ic.logisticsCard); hide(ic.paymentCard); hide(ic.giftTypeCard); hide(ic.giftReasonCard);
+    if (!instructionState.category) return;
+    if (instructionState.category === "exchange") show(ic.logisticsCard);
+    if (instructionState.category === "return") {
+      show(ic.returnObjectCard);
+      if (instructionState.returnObject === "product") {
+        show(ic.logisticsCard);
+        if (instructionState.logistics === "courier") show(ic.paymentCard);
+      }
+      if (instructionState.returnObject === "gift_card") {
+        show(ic.giftTypeCard);
+        if (instructionState.giftType === "electronic") show(ic.giftReasonCard);
+      }
+    }
+    if (instructionState.category === "service_quality" || instructionState.category === "service_repair") show(ic.logisticsCard);
+  }
+
+  function resetInstructionPreview(){
+    show(ic.emptyState); hide(ic.pdfToolbar); hide(ic.pdfScroll);
+    ic.pdfPages.innerHTML = ""; ic.pageNum.textContent = "0"; ic.pageCount.textContent = "0"; ic.zoomValue.textContent = "100%";
+  }
+
+  async function loadInstructionPdf(key){
+    const s = SCENARIOS[key];
+    if (!s) { resetInstructionPreview(); if (sections.instructions && !sections.instructions.classList.contains('hidden')) heroText.textContent = getInstructionNeedText(); return; }
+    show(ic.loadingLayer); hide(ic.emptyState); show(ic.pdfToolbar); show(ic.pdfScroll); ic.pdfPages.innerHTML = "";
+    try{
+      const loadingTask = pdfjsLib.getDocument({ url: s.url, withCredentials: false });
+      instructionState.pdfDoc = await loadingTask.promise;
+      ic.pageCount.textContent = instructionState.pdfDoc.numPages;
+      instructionState.pageNum = 1;
+      await renderAllPdfPages();
+      if (!sections.instructions.classList.contains('hidden')) heroText.textContent = s.description;
+    }catch(err){
+      console.error(err);
+      instructionState.pdfDoc = null;
+      resetInstructionPreview();
+      if (!sections.instructions.classList.contains('hidden')) heroText.textContent = "Не удалось загрузить PDF. Проверьте public-доступ к файлам в Supabase.";
+    }finally{
+      hide(ic.loadingLayer);
+    }
+  }
+
+  async function renderAllPdfPages(){
+    if (!instructionState.pdfDoc) return;
+    ic.pdfPages.innerHTML = "";
+    const scrollWidth = ic.pdfScroll.clientWidth - 36;
+    const firstPage = await instructionState.pdfDoc.getPage(1);
+    const firstViewport = firstPage.getViewport({ scale: 1 });
+    let scale = instructionState.scale;
+    if (instructionState.fitWidth) { scale = Math.max(0.5, scrollWidth / firstViewport.width); instructionState.scale = scale; }
+    ic.zoomValue.textContent = Math.round(scale * 100) + "%";
+
+    for (let i = 1; i <= instructionState.pdfDoc.numPages; i++) {
+      const page = await instructionState.pdfDoc.getPage(i);
+      const viewport = page.getViewport({ scale });
+      const canvas = document.createElement("canvas");
+      canvas.className = "pdf-page";
+      const ctx = canvas.getContext("2d", { alpha: false });
+      canvas.width = Math.floor(viewport.width * window.devicePixelRatio);
+      canvas.height = Math.floor(viewport.height * window.devicePixelRatio);
+      canvas.style.width = Math.floor(viewport.width) + "px";
+      canvas.style.height = Math.floor(viewport.height) + "px";
+      const wrap = document.createElement("div");
+      wrap.dataset.page = i;
+      wrap.appendChild(canvas);
+      ic.pdfPages.appendChild(wrap);
+      await page.render({ canvasContext: ctx, viewport, transform: [window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0] }).promise;
+    }
+    observePdfPages();
+    updatePdfIndicator();
+  }
+
+  function observePdfPages(){
+    const wraps = [...ic.pdfPages.querySelectorAll("div[data-page]")];
+    const observer = new IntersectionObserver((entries) => {
+      const top = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (top) { instructionState.pageNum = Number(top.target.dataset.page); updatePdfIndicator(); }
+    }, { root: ic.pdfScroll, threshold: [0.25, 0.5, 0.75] });
+    wraps.forEach(w => observer.observe(w));
+  }
+
+  function updatePdfIndicator(){
+    ic.pageNum.textContent = String(instructionState.pageNum || 1);
+    ic.pageCount.textContent = String(instructionState.pdfDoc?.numPages || 0);
+  }
+
+  function scrollToPdfPage(pageNum){
+    const node = ic.pdfPages.querySelector(`div[data-page="${pageNum}"]`);
+    if (!node) return;
+    node.scrollIntoView({ behavior: "smooth", block: "start" });
+    instructionState.pageNum = pageNum;
+    updatePdfIndicator();
+  }
+
+  async function updateInstructionUI(){
+    renderButtons(ic.categoryChoices, DATA.category, "category");
+    renderButtons(ic.returnObjectChoices, DATA.returnObject, "returnObject");
+    renderButtons(ic.logisticsChoices, DATA.logistics, "logistics");
+    renderButtons(ic.paymentChoices, DATA.payment, "payment");
+    renderButtons(ic.giftTypeChoices, DATA.giftType, "giftType");
+    renderButtons(ic.giftReasonChoices, DATA.giftReason, "giftReason");
+    toggleInstructionCards();
+    const key = resolveInstructionKey();
+    if (key !== instructionState.currentKey) {
+      instructionState.currentKey = key;
+      if (key) await loadInstructionPdf(key);
+      else resetInstructionPreview();
+    }
+    if (!key && !sections.instructions.classList.contains('hidden')) heroText.textContent = getInstructionNeedText();
+  }
+
+  ic.prevPageBtn.addEventListener("click", () => { if (!instructionState.pdfDoc) return; scrollToPdfPage(Math.max(1, instructionState.pageNum - 1)); });
+  ic.nextPageBtn.addEventListener("click", () => { if (!instructionState.pdfDoc) return; scrollToPdfPage(Math.min(instructionState.pdfDoc.numPages, instructionState.pageNum + 1)); });
+  ic.zoomInBtn.addEventListener("click", async () => { if (!instructionState.pdfDoc) return; instructionState.fitWidth = false; instructionState.scale = Math.min(3, +(instructionState.scale + 0.15).toFixed(2)); show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); });
+  ic.zoomOutBtn.addEventListener("click", async () => { if (!instructionState.pdfDoc) return; instructionState.fitWidth = false; instructionState.scale = Math.max(0.5, +(instructionState.scale - 0.15).toFixed(2)); show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); });
+  ic.fitWidthBtn.addEventListener("click", async () => { if (!instructionState.pdfDoc) return; instructionState.fitWidth = true; show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); });
+  window.addEventListener("resize", async () => {
+    if (instructionState.pdfDoc && instructionState.fitWidth) { show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); }
+  });
+
+  const returnForm = document.getElementById("returnForm");
+  const formStatus = document.getElementById("formStatus");
+  const clearFormBtn = document.getElementById("clearFormBtn");
+  const returnTypeSelect = document.getElementById("returnType");
+  const refundAmountField = document.getElementById("refundAmountField");
+  const positionsField = document.getElementById("positionsField");
+  const refundAmountInput = document.getElementById("refundAmount");
+  const positionsInput = document.getElementById("positions");
+
+  function toggleReturnFields() {
+    const type = returnTypeSelect.value;
+    if (type === "Частичный") {
+      refundAmountField.classList.remove("hidden");
+      positionsField.classList.remove("hidden");
+      refundAmountInput.required = true;
+      positionsInput.required = true;
+    } else {
+      refundAmountField.classList.add("hidden");
+      positionsField.classList.add("hidden");
+      refundAmountInput.required = false;
+      positionsInput.required = false;
+      refundAmountInput.value = "";
+      positionsInput.value = "";
+    }
+  }
+
+  returnTypeSelect.addEventListener("change", toggleReturnFields);
+
+  clearFormBtn.addEventListener("click", () => {
+    returnForm.reset();
+    toggleReturnFields();
+    formStatus.textContent = "Форма очищена.";
+    formStatus.className = "status-text";
+  });
+
+  returnForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("submitReturnBtn");
+
+    if (!CONFIG.APPS_SCRIPT_URL || CONFIG.APPS_SCRIPT_URL.startsWith("PASTE_")) {
+      formStatus.textContent = "Сначала укажите URL опубликованного Google Apps Script в CONFIG.APPS_SCRIPT_URL.";
+      formStatus.className = "status-text err";
+      return;
+    }
+
+    const fd = new FormData(returnForm);
+    const payload = {
+      employeeName: fd.get("employeeName") || "",
+      orderNumber: fd.get("orderNumber") || "",
+      returnType: fd.get("returnType") || "",
+      refundAmount: fd.get("refundAmount") || "",
+      positions: fd.get("positions") || "",
+      comment: fd.get("comment") || "",
+      createdAt: new Date().toISOString()
+    };
+
+    btn.disabled = true;
+    btn.textContent = "Отправляем…";
+    formStatus.textContent = "Создаем возврат и записываем данные в ту же таблицу…";
+    formStatus.className = "status-text";
+
+    try {
+      const res = await fetch(CONFIG.APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "createReturnLegacy", payload })
+      });
+      const json = await res.json();
+
+      if (json.ok) {
+        formStatus.textContent = "Возврат создан и записан в реестр.";
+        formStatus.className = "status-text ok";
+        returnForm.reset();
+        toggleReturnFields();
+        await loadReturns();
+        setTab("tracking");
+      } else {
+        throw new Error(json.error || "Не удалось создать возврат.");
+      }
+    } catch (err) {
+      console.error(err);
+      formStatus.textContent = "Ошибка при создании возврата. Проверьте Apps Script и доступ к таблице.";
+      formStatus.className = "status-text err";
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "Создать возврат";
+    }
+  });
+
+  const searchReturns = document.getElementById("searchReturns");
+  const returnsTableBody = document.getElementById("returnsTableBody");
+  const tableMeta = document.getElementById("tableMeta");
+  const refreshTableBtn = document.getElementById("refreshTableBtn");
+  let returnsData = [];
+
+  function statusPill(status){
+    const s = String(status || "").toLowerCase();
+    if (s.includes("нов")) return '<span class="pill new">' + (status || 'Новая') + '</span>';
+    if (s.includes("работ")) return '<span class="pill progress">' + status + '</span>';
+    return '<span class="pill done">' + (status || '—') + '</span>';
+  }
+
+  function renderReturnsTable(data){
+    if (!data.length) {
+      returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Записей пока нет.</td></tr>';
+      tableMeta.textContent = 'Записей: 0';
+      return;
+    }
+    returnsTableBody.innerHTML = data.map(row => `
+      <tr>
+        <td>${row.createdAt || ""}</td>
+        <td>${row.employeeName || ""}</td>
+        <td>${row.orderNumber || ""}</td>
+        <td>${row.returnType || ""}</td>
+        <td>${statusPill(row.returnStatus)}</td>
+        <td>${row.refundAmount || ""}</td>
+        <td>${row.positions || ""}</td>
+        <td>${row.comment || ""}</td>
+      </tr>
+    `).join("");
+    tableMeta.textContent = `Записей: ${data.length}`;
+  }
+
+  async function loadReturns(){
+    if (!CONFIG.APPS_SCRIPT_URL || CONFIG.APPS_SCRIPT_URL.startsWith("PASTE_")) {
+      returnsData = [
+        { createdAt: "26.03.2026 23:41:00", employeeName: "Колпаков П.Б.", orderNumber: "22398621", returnType: "Частичный", returnStatus: "В работе", refundAmount: "39000", positions: "BORK HW600gg", comment: "Клиент согласован" },
+        { createdAt: "26.03.2026 22:10:00", employeeName: "Смирнов А.А.", orderNumber: "16802921", returnType: "Полный", returnStatus: "Новая заявка", refundAmount: "", positions: "", comment: "Посылка утеряна" }
+      ];
+      renderReturnsTable(returnsData);
+      return;
+    }
+
+    returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Загрузка данных…</td></tr>';
+    try {
+      const url = CONFIG.APPS_SCRIPT_URL + "?action=listReturnsLegacy";
+      const res = await fetch(url);
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || "Ошибка загрузки");
+      returnsData = Array.isArray(json.rows) ? json.rows : [];
+      renderReturnsTable(returnsData);
+    } catch (err) {
+      console.error(err);
+      returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:#ff8a8a">Не удалось загрузить данные из реестра.</td></tr>';
+    }
+  }
+
+  searchReturns.addEventListener("input", () => {
+    const q = searchReturns.value.trim().toLowerCase();
+    if (!q) return renderReturnsTable(returnsData);
+    const filtered = returnsData.filter(row => Object.values(row).join(" ").toLowerCase().includes(q));
+    renderReturnsTable(filtered);
+  });
+  refreshTableBtn.addEventListener("click", loadReturns);
+
+  const savedTab = localStorage.getItem("g7_returns_active_tab_v3");
+  setTab(savedTab || "create");
+  toggleReturnFields();
+  updateInstructionUI();
+  loadReturns();
+</script>
+</body>
+</html>
