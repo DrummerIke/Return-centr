@@ -605,6 +605,18 @@
         </div>
       </aside>
 
+      <main>
+        <div class="hero">
+          <div>
+            <h2 id="heroTitle">Создать возврат</h2>
+            <p id="heroText">Короткая премиальная форма, которая пишет данные в ту же таблицу и по тем же параметрам, без лишних полей.</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn btn-ghost btn-small" id="heroAction1">Очистить форму</button>
+            <button class="btn btn-secondary btn-small" id="heroAction2">Открыть таблицу</button>
+          </div>
+        </div>
+
         <section class="content-card hidden" id="tab-instructions">
           <div class="content-head">
             <div>
@@ -843,6 +855,8 @@
     Object.keys(sections).forEach(key => sections[key].classList.toggle("hidden", key !== name));
 
     if(name === "create"){
+      heroTitle.textContent = "Создать возврат";
+      heroText.textContent = "Короткая премиальная форма, которая пишет данные в ту же таблицу и по тем же параметрам, без лишних полей.";
       heroAction1.textContent = "Очистить форму";
       heroAction1.onclick = () => document.getElementById("clearFormBtn").click();
       heroAction2.textContent = "Открыть таблицу";
@@ -850,6 +864,8 @@
     }
 
     if(name === "tracking"){
+      heroTitle.textContent = "Отследить возврат";
+      heroText.textContent = "Да — здесь выводятся данные из той же таблицы. Без фильтра — последние 50, с фильтром — все записи за выбранный период.";
       heroAction1.textContent = "Обновить реестр";
       heroAction1.onclick = () => loadReturns();
       heroAction2.textContent = "Открыть таблицу";
