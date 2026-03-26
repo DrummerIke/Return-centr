@@ -20,6 +20,7 @@
       --shadow:0 18px 44px rgba(0,0,0,.42);
       --radius-xl:24px; --radius-lg:18px; --radius-md:14px;
     }
+
     html,body{margin:0;padding:0}
     body{
       font-family:'Nunito',sans-serif;
@@ -27,151 +28,476 @@
       color:var(--text);
       padding:16px;
     }
+
     .app{max-width:1560px;margin:0 auto}
-    .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px}
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
-      background:var(--accent-soft);border:1px solid rgba(239,111,46,.45);
-      color:#ffbf98;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:14px
     }
-    .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px rgba(239,111,46,.85)}
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      border:1px solid rgba(239,111,46,.45);
+      color:#ffbf98;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase
+    }
+
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--accent);
+      box-shadow:0 0 10px rgba(239,111,46,.85)
+    }
+
     .top-title{text-align:right}
     .top-title h1{margin:0;font-size:28px;line-height:1.05}
     .top-title p{margin:5px 0 0;color:var(--muted);font-size:13px}
 
-    .layout{display:grid;grid-template-columns:330px 1fr;gap:14px}
+    .layout{
+      display:grid;
+      grid-template-columns:330px 1fr;
+      gap:14px
+    }
+
     .panel{
       background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow);
-      overflow:hidden;min-height:920px
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      min-height:920px
     }
+
     .sidebar{padding:16px}
-    .section{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius-lg);padding:14px;margin-bottom:12px}
+
+    .section{
+      background:var(--bg2);
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      padding:14px;
+      margin-bottom:12px
+    }
+
     .section:last-child{margin-bottom:0}
+
     .eyebrow{
-      font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#ffbf98;margin-bottom:10px
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:#ffbf98;
+      margin-bottom:10px
     }
 
     .primary-stack{display:grid;gap:10px}
+
     .action-card{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      width:100%;text-align:left;padding:15px 16px;border-radius:18px;border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(239,111,46,.14), rgba(239,111,46,.08));color:#fff;
-      cursor:pointer;transition:.18s ease;font:800 15px 'Nunito',sans-serif
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      width:100%;
+      text-align:left;
+      padding:15px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(239,111,46,.14), rgba(239,111,46,.08));
+      color:#fff;
+      cursor:pointer;
+      transition:.18s ease;
+      font:800 15px 'Nunito',sans-serif
     }
-    .action-card:hover{transform:translateY(-1px);border-color:rgba(239,111,46,.65);background:linear-gradient(180deg, rgba(239,111,46,.2), rgba(239,111,46,.1))}
-    .action-card .mini{display:block;font-size:12px;color:#ffcfb3;font-weight:700;margin-top:3px}
+
+    .action-card:hover{
+      transform:translateY(-1px);
+      border-color:rgba(239,111,46,.65);
+      background:linear-gradient(180deg, rgba(239,111,46,.2), rgba(239,111,46,.1))
+    }
+
+    .action-card .mini{
+      display:block;
+      font-size:12px;
+      color:#ffcfb3;
+      font-weight:700;
+      margin-top:3px
+    }
 
     .tabs{display:grid;gap:10px}
+
     .tab-btn{
-      width:100%;text-align:left;padding:14px;border-radius:16px;border:1px solid rgba(255,255,255,.08);
-      background:var(--panel);color:#fff;cursor:pointer;transition:.18s ease;font:800 15px 'Nunito',sans-serif;text-decoration:none
+      width:100%;
+      text-align:left;
+      padding:14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:var(--panel);
+      color:#fff;
+      cursor:pointer;
+      transition:.18s ease;
+      font:800 15px 'Nunito',sans-serif;
+      text-decoration:none
     }
-    .tab-btn:hover{transform:translateY(-1px);border-color:var(--line-strong);background:#433936}
+
+    .tab-btn:hover{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:#433936
+    }
+
     .tab-btn.active{
       background:linear-gradient(180deg, rgba(239,111,46,.2), rgba(239,111,46,.12));
-      border-color:rgba(239,111,46,.8);box-shadow:0 0 0 1px rgba(239,111,46,.3) inset
+      border-color:rgba(239,111,46,.8);
+      box-shadow:0 0 0 1px rgba(239,111,46,.3) inset
     }
 
     .hero{
-      display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
       background:linear-gradient(135deg, rgba(239,111,46,.13), rgba(255,255,255,.02));
-      border:1px solid var(--line);border-radius:var(--radius-xl);padding:18px;box-shadow:var(--shadow);
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      padding:18px;
+      box-shadow:var(--shadow);
       margin-bottom:14px
     }
+
     .hero h2{margin:0 0 8px;font-size:26px}
     .hero p{margin:0;color:#cfc5c0;line-height:1.55;max-width:860px}
     .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+
     .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:8px;
-      min-height:46px;padding:12px 18px;border-radius:999px;border:none;
-      font:800 14px 'Nunito',sans-serif;cursor:pointer;transition:.18s ease;text-decoration:none
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:46px;
+      padding:12px 18px;
+      border-radius:999px;
+      border:none;
+      font:800 14px 'Nunito',sans-serif;
+      cursor:pointer;
+      transition:.18s ease;
+      text-decoration:none
     }
+
     .btn-primary{background:var(--accent);color:#fff}
-    .btn-primary:hover{background:var(--accent-2);transform:translateY(-1px);box-shadow:0 0 16px rgba(239,111,46,.35)}
-    .btn-secondary{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-    .btn-secondary:hover{background:var(--accent);color:#fff;transform:translateY(-1px)}
-    .btn-ghost{background:var(--panel);color:#fff;border:1px solid rgba(255,255,255,.08)}
+    .btn-primary:hover{
+      background:var(--accent-2);
+      transform:translateY(-1px);
+      box-shadow:0 0 16px rgba(239,111,46,.35)
+    }
+
+    .btn-secondary{
+      background:transparent;
+      color:var(--accent);
+      border:1px solid var(--accent)
+    }
+
+    .btn-secondary:hover{
+      background:var(--accent);
+      color:#fff;
+      transform:translateY(-1px)
+    }
+
+    .btn-ghost{
+      background:var(--panel);
+      color:#fff;
+      border:1px solid rgba(255,255,255,.08)
+    }
+
     .btn-ghost:hover{background:#463c39}
     .btn-small{min-height:38px;padding:9px 14px;font-size:13px}
 
     .content-card{
       background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
-      border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow);overflow:hidden
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      box-shadow:var(--shadow);
+      overflow:hidden
     }
-    .content-head{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid var(--line)}
+
+    .content-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      padding:16px 18px;
+      border-bottom:1px solid var(--line)
+    }
+
     .content-head h3{margin:0;font-size:22px}
     .content-head p{margin:4px 0 0;color:var(--muted);font-size:14px}
     .content-body{padding:18px}
     .hidden{display:none!important}
 
-    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .field{display:flex;flex-direction:column;gap:7px}
-    .field.full{grid-column:1/-1}
-    .label{font-size:13px;font-weight:800;color:#dfd5d1}
-    input, select, textarea{
-      width:100%;border:1px solid rgba(255,255,255,.08);background:var(--panel);color:#fff;
-      border-radius:14px;padding:13px 14px;font:600 14px 'Nunito',sans-serif;outline:none;transition:.18s ease
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px
     }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:7px
+    }
+
+    .field.full{grid-column:1/-1}
+
+    .label{
+      font-size:13px;
+      font-weight:800;
+      color:#dfd5d1
+    }
+
+    input, select, textarea{
+      width:100%;
+      border:1px solid rgba(255,255,255,.08);
+      background:var(--panel);
+      color:#fff;
+      border-radius:14px;
+      padding:13px 14px;
+      font:600 14px 'Nunito',sans-serif;
+      outline:none;
+      transition:.18s ease
+    }
+
     textarea{min-height:120px;resize:vertical}
     input::placeholder, textarea::placeholder{color:#a99d98}
-    input:focus, select:focus, textarea:focus{
-      border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:#433936
-    }
-    .field-note{font-size:12px;color:var(--muted);line-height:1.45}
-    .status-row{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:16px
-    }
-    .status-text{font-size:14px;color:#e5dcd8}
-    .ok{color:var(--success)} .err{color:var(--danger)}
 
-    .table-tools{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-    .search-box{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    input:focus, select:focus, textarea:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px var(--accent);
+      background:#433936
+    }
+
+    .field-note{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.45
+    }
+
+    .status-row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:var(--bg2);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      margin-top:16px
+    }
+
+    .status-text{font-size:14px;color:#e5dcd8}
+    .ok{color:var(--success)}
+    .err{color:var(--danger)}
+
+    .table-tools{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:14px
+    }
+
+    .search-box{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center
+    }
+
     .search-box input{min-width:260px}
-    .table-wrap{background:var(--bg2);border:1px solid var(--line);border-radius:18px;overflow:auto}
-    table{width:100%;border-collapse:collapse;min-width:980px}
-    thead{background:linear-gradient(90deg, rgba(239,111,46,.22), rgba(255,255,255,.02))}
-    th, td{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.06);text-align:left;vertical-align:top}
-    th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#ffbf98}
+
+    .table-wrap{
+      background:var(--bg2);
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:auto
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:980px
+    }
+
+    thead{
+      background:linear-gradient(90deg, rgba(239,111,46,.22), rgba(255,255,255,.02))
+    }
+
+    th, td{
+      padding:12px 12px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      text-align:left;
+      vertical-align:top
+    }
+
+    th{
+      font-size:12px;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color:#ffbf98
+    }
+
     td{font-size:14px;color:#f2ece9}
     tr:hover td{background:rgba(255,255,255,.02)}
-    .pill{display:inline-flex;align-items:center;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800}
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800
+    }
+
     .pill.new{background:rgba(63,195,138,.14);color:#80e4b5}
     .pill.progress{background:rgba(239,111,46,.14);color:#ffbf98}
     .pill.done{background:rgba(255,255,255,.1);color:#ece2dd}
+    .pill.cancel{background:rgba(255,0,0,.16);color:#ff8b8b}
 
-    .instruction-layout{display:grid;grid-template-columns:320px 1fr;gap:14px}
-    .choice-list{display:grid;gap:10px}
-    .choice{
-      width:100%;border:1px solid rgba(255,255,255,.08);background:var(--panel);color:#fff;
-      padding:13px 12px;border-radius:14px;font:700 14px 'Nunito',sans-serif;cursor:pointer;transition:.18s ease;text-align:left
+    .instruction-layout{
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:14px
     }
-    .choice:hover{border-color:var(--line-strong);background:#433936;transform:translateY(-1px)}
+
+    .choice-list{display:grid;gap:10px}
+
+    .choice{
+      width:100%;
+      border:1px solid rgba(255,255,255,.08);
+      background:var(--panel);
+      color:#fff;
+      padding:13px 12px;
+      border-radius:14px;
+      font:700 14px 'Nunito',sans-serif;
+      cursor:pointer;
+      transition:.18s ease;
+      text-align:left
+    }
+
+    .choice:hover{
+      border-color:var(--line-strong);
+      background:#433936;
+      transform:translateY(-1px)
+    }
+
     .choice.active{
       background:linear-gradient(180deg, rgba(239,111,46,.18), rgba(239,111,46,.12));
-      border-color:rgba(239,111,46,.7);box-shadow:0 0 0 1px rgba(239,111,46,.35) inset
+      border-color:rgba(239,111,46,.7);
+      box-shadow:0 0 0 1px rgba(239,111,46,.35) inset
     }
-    .pdf-shell{background:#1d1918;border:1px solid var(--line);border-radius:18px;overflow:hidden;min-height:720px;position:relative}
+
+    .pdf-shell{
+      background:#1d1918;
+      border:1px solid var(--line);
+      border-radius:18px;
+      overflow:hidden;
+      min-height:720px;
+      position:relative
+    }
+
     .pdf-toolbar{
-      display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;
-      padding:12px 14px;border-bottom:1px solid var(--line);background:#2a2422
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:12px 14px;
+      border-bottom:1px solid var(--line);
+      background:#2a2422
     }
-    .toolbar-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+    .toolbar-group{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap
+    }
+
     .toolbar-btn{
-      min-width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:var(--panel);
-      color:#fff;font:800 16px 'Nunito',sans-serif;cursor:pointer;transition:.18s ease
+      min-width:40px;
+      height:40px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:var(--panel);
+      color:#fff;
+      font:800 16px 'Nunito',sans-serif;
+      cursor:pointer;
+      transition:.18s ease
     }
-    .toolbar-btn:hover{background:#463c39;border-color:rgba(239,111,46,.4)}
-    .pdf-scroll{height:760px;overflow:auto;padding:18px;background:#2b2624}
-    .pdf-pages{display:flex;flex-direction:column;gap:18px;align-items:center}
-    .pdf-page{display:block;background:#fff;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-    .empty{min-height:720px;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;color:#c1b6b0;line-height:1.6}
+
+    .toolbar-btn:hover{
+      background:#463c39;
+      border-color:rgba(239,111,46,.4)
+    }
+
+    .pdf-scroll{
+      height:760px;
+      overflow:auto;
+      padding:18px;
+      background:#2b2624
+    }
+
+    .pdf-pages{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:center
+    }
+
+    .pdf-page{
+      display:block;
+      background:#fff;
+      border-radius:10px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35)
+    }
+
+    .empty{
+      min-height:720px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:30px;
+      color:#c1b6b0;
+      line-height:1.6
+    }
+
     .empty-inner{max-width:560px}
     .empty-title{font-size:24px;font-weight:800;color:#fff4ef;margin-bottom:8px}
+
     .loading{
-      position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(29,25,24,.72);
-      backdrop-filter:blur(2px);z-index:3;font-size:16px;font-weight:800;color:#fff4ef
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(29,25,24,.72);
+      backdrop-filter:blur(2px);
+      z-index:3;
+      font-size:16px;
+      font-weight:800;
+      color:#fff4ef
     }
 
     @media (max-width:1180px){
@@ -181,6 +507,7 @@
       .pdf-scroll{height:620px}
       .hero{flex-direction:column}
     }
+
     @media (max-width:760px){
       body{padding:12px}
       .top-title h1{font-size:22px}
@@ -382,18 +709,46 @@
           <div class="content-head">
             <div>
               <h3>Отследить возврат</h3>
-              <p>Реестр возвратов из той же таблицы. Свежие записи выводятся сверху автоматически.</p>
+              <p>Реестр возвратов из той же таблицы. Без фильтра — последние 50, с фильтром — все записи за выбранный период.</p>
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap">
               <button class="btn btn-ghost btn-small" id="refreshTableBtn">Обновить</button>
               <a class="btn btn-secondary btn-small" id="openTableBtnInner" href="#" target="_blank" rel="noopener noreferrer">Открыть таблицу отдельно</a>
             </div>
           </div>
+
           <div class="content-body">
             <div class="table-tools">
               <div class="search-box">
                 <input id="searchReturns" type="text" placeholder="Поиск по заказу, сотруднику, позиции, сумме или комментарию" />
+
+                <select id="filterMonth">
+                  <option value="">Месяц</option>
+                  <option value="1">Янв</option>
+                  <option value="2">Фев</option>
+                  <option value="3">Мар</option>
+                  <option value="4">Апр</option>
+                  <option value="5">Май</option>
+                  <option value="6">Июн</option>
+                  <option value="7">Июл</option>
+                  <option value="8">Авг</option>
+                  <option value="9">Сен</option>
+                  <option value="10">Окт</option>
+                  <option value="11">Ноя</option>
+                  <option value="12">Дек</option>
+                </select>
+
+                <select id="filterYear">
+                  <option value="">Год</option>
+                  <option value="2025">2025</option>
+                  <option value="2026">2026</option>
+                  <option value="2027">2027</option>
+                </select>
+
+                <button class="btn btn-ghost btn-small" id="applyFilterBtn" type="button">Применить</button>
+                <button class="btn btn-ghost btn-small" id="clearFilterBtn" type="button">Сбросить</button>
               </div>
+
               <div style="font-size:13px;color:var(--muted)" id="tableMeta">Записей: 0</div>
             </div>
 
@@ -446,6 +801,7 @@
   const heroAction2 = document.getElementById("heroAction2");
   const openTableExternal = document.getElementById("openTableExternal");
   const openTableBtnInner = document.getElementById("openTableBtnInner");
+
   openTableExternal.href = CONFIG.RETURNS_SHEET_URL;
   openTableBtnInner.href = CONFIG.RETURNS_SHEET_URL;
 
@@ -468,7 +824,7 @@
 
     if(name === "tracking"){
       heroTitle.textContent = "Отследить возврат";
-      heroText.textContent = "Да — здесь выводятся данные из той же таблицы, и самые свежие записи всегда стоят сверху.";
+      heroText.textContent = "Да — здесь выводятся данные из той же таблицы. Без фильтра — последние 50, с фильтром — все записи за выбранный месяц.";
       heroAction1.textContent = "Обновить реестр";
       heroAction1.onclick = () => loadReturns();
       heroAction2.textContent = "Открыть таблицу";
@@ -487,11 +843,14 @@
       heroAction2.onclick = async () => {
         const s = instructionState.currentKey ? SCENARIOS[instructionState.currentKey] : null;
         if (!s) return;
-        try { await navigator.clipboard.writeText(s.url); heroText.textContent = "Ссылка на инструкцию скопирована."; } catch(e) {}
+        try {
+          await navigator.clipboard.writeText(s.url);
+          heroText.textContent = "Ссылка на инструкцию скопирована.";
+        } catch(e) {}
       };
     }
 
-    localStorage.setItem("g7_returns_active_tab_v3", name);
+    localStorage.setItem("g7_returns_active_tab_v4", name);
   }
 
   topActionCards.forEach(btn => btn.addEventListener("click", () => setTab(btn.dataset.tab)));
@@ -546,9 +905,25 @@
     service_repair_courier: { title: "Ремонт по гарантии — наша доставка", description: "Сценарий гарантийного ремонта при нашей доставке или курьерской логистике.", file: "service_warranty_repair_courier_pickup.pdf" },
     service_repair_region_tk: { title: "Ремонт по гарантии — регион / доставка ТК", description: "Сценарий гарантийного ремонта для регионов и транспортной компании.", file: "service_warranty_repair_region_transport_company.pdf" }
   };
-  for (const key in SCENARIOS) SCENARIOS[key].url = CONFIG.INSTRUCTION_BASE_URL + SCENARIOS[key].file;
 
-  const instructionState = { category:"", returnObject:"", logistics:"", payment:"", giftType:"", giftReason:"", currentKey:"", pdfDoc:null, scale:1, pageNum:1, fitWidth:true };
+  for (const key in SCENARIOS) {
+    SCENARIOS[key].url = CONFIG.INSTRUCTION_BASE_URL + SCENARIOS[key].file;
+  }
+
+  const instructionState = {
+    category:"",
+    returnObject:"",
+    logistics:"",
+    payment:"",
+    giftType:"",
+    giftReason:"",
+    currentKey:"",
+    pdfDoc:null,
+    scale:1,
+    pageNum:1,
+    fitWidth:true
+  };
+
   const ic = {
     categoryChoices: document.getElementById("categoryChoices"),
     returnObjectCard: document.getElementById("returnObjectCard"),
@@ -590,8 +965,19 @@
 
   function setInstructionState(key, value){
     instructionState[key] = value;
-    if (key === "category") { instructionState.returnObject=""; instructionState.logistics=""; instructionState.payment=""; instructionState.giftType=""; instructionState.giftReason=""; }
-    if (key === "returnObject") { instructionState.logistics=""; instructionState.payment=""; instructionState.giftType=""; instructionState.giftReason=""; }
+    if (key === "category") {
+      instructionState.returnObject="";
+      instructionState.logistics="";
+      instructionState.payment="";
+      instructionState.giftType="";
+      instructionState.giftReason="";
+    }
+    if (key === "returnObject") {
+      instructionState.logistics="";
+      instructionState.payment="";
+      instructionState.giftType="";
+      instructionState.giftReason="";
+    }
     if (key === "logistics") instructionState.payment="";
     if (key === "giftType") instructionState.giftReason="";
     updateInstructionUI();
@@ -605,6 +991,7 @@
       if (instructionState.logistics === "courier") return "exchange_courier";
       if (instructionState.logistics === "region_tk") return "exchange_region_tk";
     }
+
     if (instructionState.category === "return") {
       if (instructionState.returnObject === "product") {
         if (instructionState.logistics === "region_tk") return "return_region_tk";
@@ -624,14 +1011,17 @@
         }
       }
     }
+
     if (instructionState.category === "service_quality") {
       if (instructionState.logistics === "courier") return "service_quality_courier";
       if (instructionState.logistics === "region_tk") return "service_quality_region_tk";
     }
+
     if (instructionState.category === "service_repair") {
       if (instructionState.logistics === "courier") return "service_repair_courier";
       if (instructionState.logistics === "region_tk") return "service_repair_region_tk";
     }
+
     return "";
   }
 
@@ -654,9 +1044,16 @@
   }
 
   function toggleInstructionCards(){
-    hide(ic.returnObjectCard); hide(ic.logisticsCard); hide(ic.paymentCard); hide(ic.giftTypeCard); hide(ic.giftReasonCard);
+    hide(ic.returnObjectCard);
+    hide(ic.logisticsCard);
+    hide(ic.paymentCard);
+    hide(ic.giftTypeCard);
+    hide(ic.giftReasonCard);
+
     if (!instructionState.category) return;
+
     if (instructionState.category === "exchange") show(ic.logisticsCard);
+
     if (instructionState.category === "return") {
       show(ic.returnObjectCard);
       if (instructionState.returnObject === "product") {
@@ -668,18 +1065,36 @@
         if (instructionState.giftType === "electronic") show(ic.giftReasonCard);
       }
     }
-    if (instructionState.category === "service_quality" || instructionState.category === "service_repair") show(ic.logisticsCard);
+
+    if (instructionState.category === "service_quality" || instructionState.category === "service_repair") {
+      show(ic.logisticsCard);
+    }
   }
 
   function resetInstructionPreview(){
-    show(ic.emptyState); hide(ic.pdfToolbar); hide(ic.pdfScroll);
-    ic.pdfPages.innerHTML = ""; ic.pageNum.textContent = "0"; ic.pageCount.textContent = "0"; ic.zoomValue.textContent = "100%";
+    show(ic.emptyState);
+    hide(ic.pdfToolbar);
+    hide(ic.pdfScroll);
+    ic.pdfPages.innerHTML = "";
+    ic.pageNum.textContent = "0";
+    ic.pageCount.textContent = "0";
+    ic.zoomValue.textContent = "100%";
   }
 
   async function loadInstructionPdf(key){
     const s = SCENARIOS[key];
-    if (!s) { resetInstructionPreview(); if (sections.instructions && !sections.instructions.classList.contains('hidden')) heroText.textContent = getInstructionNeedText(); return; }
-    show(ic.loadingLayer); hide(ic.emptyState); show(ic.pdfToolbar); show(ic.pdfScroll); ic.pdfPages.innerHTML = "";
+    if (!s) {
+      resetInstructionPreview();
+      if (sections.instructions && !sections.instructions.classList.contains('hidden')) heroText.textContent = getInstructionNeedText();
+      return;
+    }
+
+    show(ic.loadingLayer);
+    hide(ic.emptyState);
+    show(ic.pdfToolbar);
+    show(ic.pdfScroll);
+    ic.pdfPages.innerHTML = "";
+
     try{
       const loadingTask = pdfjsLib.getDocument({ url: s.url, withCredentials: false });
       instructionState.pdfDoc = await loadingTask.promise;
@@ -699,30 +1114,45 @@
 
   async function renderAllPdfPages(){
     if (!instructionState.pdfDoc) return;
+
     ic.pdfPages.innerHTML = "";
     const scrollWidth = ic.pdfScroll.clientWidth - 36;
     const firstPage = await instructionState.pdfDoc.getPage(1);
     const firstViewport = firstPage.getViewport({ scale: 1 });
+
     let scale = instructionState.scale;
-    if (instructionState.fitWidth) { scale = Math.max(0.5, scrollWidth / firstViewport.width); instructionState.scale = scale; }
+    if (instructionState.fitWidth) {
+      scale = Math.max(0.5, scrollWidth / firstViewport.width);
+      instructionState.scale = scale;
+    }
+
     ic.zoomValue.textContent = Math.round(scale * 100) + "%";
 
     for (let i = 1; i <= instructionState.pdfDoc.numPages; i++) {
       const page = await instructionState.pdfDoc.getPage(i);
       const viewport = page.getViewport({ scale });
+
       const canvas = document.createElement("canvas");
       canvas.className = "pdf-page";
       const ctx = canvas.getContext("2d", { alpha: false });
+
       canvas.width = Math.floor(viewport.width * window.devicePixelRatio);
       canvas.height = Math.floor(viewport.height * window.devicePixelRatio);
       canvas.style.width = Math.floor(viewport.width) + "px";
       canvas.style.height = Math.floor(viewport.height) + "px";
+
       const wrap = document.createElement("div");
       wrap.dataset.page = i;
       wrap.appendChild(canvas);
       ic.pdfPages.appendChild(wrap);
-      await page.render({ canvasContext: ctx, viewport, transform: [window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0] }).promise;
+
+      await page.render({
+        canvasContext: ctx,
+        viewport,
+        transform: [window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0]
+      }).promise;
     }
+
     observePdfPages();
     updatePdfIndicator();
   }
@@ -731,8 +1161,12 @@
     const wraps = [...ic.pdfPages.querySelectorAll("div[data-page]")];
     const observer = new IntersectionObserver((entries) => {
       const top = entries.filter(e => e.isIntersecting).sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
-      if (top) { instructionState.pageNum = Number(top.target.dataset.page); updatePdfIndicator(); }
+      if (top) {
+        instructionState.pageNum = Number(top.target.dataset.page);
+        updatePdfIndicator();
+      }
     }, { root: ic.pdfScroll, threshold: [0.25, 0.5, 0.75] });
+
     wraps.forEach(w => observer.observe(w));
   }
 
@@ -756,23 +1190,67 @@
     renderButtons(ic.paymentChoices, DATA.payment, "payment");
     renderButtons(ic.giftTypeChoices, DATA.giftType, "giftType");
     renderButtons(ic.giftReasonChoices, DATA.giftReason, "giftReason");
+
     toggleInstructionCards();
+
     const key = resolveInstructionKey();
     if (key !== instructionState.currentKey) {
       instructionState.currentKey = key;
       if (key) await loadInstructionPdf(key);
       else resetInstructionPreview();
     }
-    if (!key && !sections.instructions.classList.contains('hidden')) heroText.textContent = getInstructionNeedText();
+
+    if (!key && !sections.instructions.classList.contains('hidden')) {
+      heroText.textContent = getInstructionNeedText();
+    }
   }
 
-  ic.prevPageBtn.addEventListener("click", () => { if (!instructionState.pdfDoc) return; scrollToPdfPage(Math.max(1, instructionState.pageNum - 1)); });
-  ic.nextPageBtn.addEventListener("click", () => { if (!instructionState.pdfDoc) return; scrollToPdfPage(Math.min(instructionState.pdfDoc.numPages, instructionState.pageNum + 1)); });
-  ic.zoomInBtn.addEventListener("click", async () => { if (!instructionState.pdfDoc) return; instructionState.fitWidth = false; instructionState.scale = Math.min(3, +(instructionState.scale + 0.15).toFixed(2)); show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); });
-  ic.zoomOutBtn.addEventListener("click", async () => { if (!instructionState.pdfDoc) return; instructionState.fitWidth = false; instructionState.scale = Math.max(0.5, +(instructionState.scale - 0.15).toFixed(2)); show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); });
-  ic.fitWidthBtn.addEventListener("click", async () => { if (!instructionState.pdfDoc) return; instructionState.fitWidth = true; show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); });
+  ic.prevPageBtn.addEventListener("click", () => {
+    if (!instructionState.pdfDoc) return;
+    scrollToPdfPage(Math.max(1, instructionState.pageNum - 1));
+  });
+
+  ic.nextPageBtn.addEventListener("click", () => {
+    if (!instructionState.pdfDoc) return;
+    scrollToPdfPage(Math.min(instructionState.pdfDoc.numPages, instructionState.pageNum + 1));
+  });
+
+  ic.zoomInBtn.addEventListener("click", async () => {
+    if (!instructionState.pdfDoc) return;
+    instructionState.fitWidth = false;
+    instructionState.scale = Math.min(3, +(instructionState.scale + 0.15).toFixed(2));
+    show(ic.loadingLayer);
+    await renderAllPdfPages();
+    hide(ic.loadingLayer);
+    scrollToPdfPage(instructionState.pageNum);
+  });
+
+  ic.zoomOutBtn.addEventListener("click", async () => {
+    if (!instructionState.pdfDoc) return;
+    instructionState.fitWidth = false;
+    instructionState.scale = Math.max(0.5, +(instructionState.scale - 0.15).toFixed(2));
+    show(ic.loadingLayer);
+    await renderAllPdfPages();
+    hide(ic.loadingLayer);
+    scrollToPdfPage(instructionState.pageNum);
+  });
+
+  ic.fitWidthBtn.addEventListener("click", async () => {
+    if (!instructionState.pdfDoc) return;
+    instructionState.fitWidth = true;
+    show(ic.loadingLayer);
+    await renderAllPdfPages();
+    hide(ic.loadingLayer);
+    scrollToPdfPage(instructionState.pageNum);
+  });
+
   window.addEventListener("resize", async () => {
-    if (instructionState.pdfDoc && instructionState.fitWidth) { show(ic.loadingLayer); await renderAllPdfPages(); hide(ic.loadingLayer); scrollToPdfPage(instructionState.pageNum); }
+    if (instructionState.pdfDoc && instructionState.fitWidth) {
+      show(ic.loadingLayer);
+      await renderAllPdfPages();
+      hide(ic.loadingLayer);
+      scrollToPdfPage(instructionState.pageNum);
+    }
   });
 
   const returnForm = document.getElementById("returnForm");
@@ -865,15 +1343,32 @@
   });
 
   const searchReturns = document.getElementById("searchReturns");
+  const filterMonth = document.getElementById("filterMonth");
+  const filterYear = document.getElementById("filterYear");
+  const applyFilterBtn = document.getElementById("applyFilterBtn");
+  const clearFilterBtn = document.getElementById("clearFilterBtn");
   const returnsTableBody = document.getElementById("returnsTableBody");
   const tableMeta = document.getElementById("tableMeta");
   const refreshTableBtn = document.getElementById("refreshTableBtn");
   let returnsData = [];
 
+  function initFilters() {
+    const savedMonth = localStorage.getItem("g7_returns_filter_month");
+    const savedYear = localStorage.getItem("g7_returns_filter_year");
+    const now = new Date();
+
+    filterMonth.value = savedMonth || String(now.getMonth() + 1);
+    filterYear.value = savedYear || String(now.getFullYear());
+  }
+
   function statusPill(status){
     const s = String(status || "").toLowerCase();
+
     if (s.includes("нов")) return '<span class="pill new">' + (status || 'Новая') + '</span>';
     if (s.includes("работ")) return '<span class="pill progress">' + status + '</span>';
+    if (s.includes("заверш")) return '<span class="pill done">' + status + '</span>';
+    if (s.includes("отмен") || s.includes("отказ")) return '<span class="pill cancel">' + status + '</span>';
+
     return '<span class="pill done">' + (status || '—') + '</span>';
   }
 
@@ -883,6 +1378,7 @@
       tableMeta.textContent = 'Записей: 0';
       return;
     }
+
     returnsTableBody.innerHTML = data.map(row => `
       <tr>
         <td>${row.createdAt || ""}</td>
@@ -895,44 +1391,74 @@
         <td>${row.comment || ""}</td>
       </tr>
     `).join("");
+
     tableMeta.textContent = `Записей: ${data.length}`;
   }
 
   async function loadReturns(){
-    if (!CONFIG.APPS_SCRIPT_URL || CONFIG.APPS_SCRIPT_URL.startsWith("PASTE_")) {
-      returnsData = [
-        { createdAt: "26.03.2026 23:41:00", employeeName: "Колпаков П.Б.", orderNumber: "22398621", returnType: "Частичный", returnStatus: "В работе", refundAmount: "39000", positions: "BORK HW600gg", comment: "Клиент согласован" },
-        { createdAt: "26.03.2026 22:10:00", employeeName: "Смирнов А.А.", orderNumber: "16802921", returnType: "Полный", returnStatus: "Новая заявка", refundAmount: "", positions: "", comment: "Посылка утеряна" }
-      ];
-      renderReturnsTable(returnsData);
-      return;
-    }
-
     returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Загрузка данных…</td></tr>';
+
     try {
-      const url = CONFIG.APPS_SCRIPT_URL + "?action=listReturnsLegacy";
+      const month = filterMonth.value;
+      const year = filterYear.value;
+
+      localStorage.setItem("g7_returns_filter_month", month);
+      localStorage.setItem("g7_returns_filter_year", year);
+
+      let url = CONFIG.APPS_SCRIPT_URL + "?action=listReturnsLegacy";
+      if (month && year) {
+        url += `&month=${encodeURIComponent(month)}&year=${encodeURIComponent(year)}`;
+      }
+
       const res = await fetch(url);
       const json = await res.json();
+
       if (!json.ok) throw new Error(json.error || "Ошибка загрузки");
+
       returnsData = Array.isArray(json.rows) ? json.rows : [];
       renderReturnsTable(returnsData);
+      applySearch();
     } catch (err) {
       console.error(err);
       returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:#ff8a8a">Не удалось загрузить данные из реестра.</td></tr>';
     }
   }
 
-  searchReturns.addEventListener("input", () => {
+  function applySearch(){
     const q = searchReturns.value.trim().toLowerCase();
-    if (!q) return renderReturnsTable(returnsData);
-    const filtered = returnsData.filter(row => Object.values(row).join(" ").toLowerCase().includes(q));
+
+    if (!q) {
+      renderReturnsTable(returnsData);
+      return;
+    }
+
+    const filtered = returnsData.filter(row =>
+      String(row.orderNumber || "").toLowerCase().includes(q) ||
+      String(row.employeeName || "").toLowerCase().includes(q) ||
+      String(row.positions || "").toLowerCase().includes(q) ||
+      String(row.refundAmount || "").toLowerCase().includes(q) ||
+      String(row.comment || "").toLowerCase().includes(q) ||
+      String(row.returnStatus || "").toLowerCase().includes(q)
+    );
+
     renderReturnsTable(filtered);
+  }
+
+  searchReturns.addEventListener("input", applySearch);
+  applyFilterBtn.addEventListener("click", loadReturns);
+  clearFilterBtn.addEventListener("click", () => {
+    filterMonth.value = "";
+    filterYear.value = "";
+    localStorage.removeItem("g7_returns_filter_month");
+    localStorage.removeItem("g7_returns_filter_year");
+    loadReturns();
   });
   refreshTableBtn.addEventListener("click", loadReturns);
 
-  const savedTab = localStorage.getItem("g7_returns_active_tab_v3");
+  const savedTab = localStorage.getItem("g7_returns_active_tab_v4");
   setTab(savedTab || "create");
   toggleReturnFields();
+  initFilters();
   updateInstructionUI();
   loadReturns();
 </script>
