@@ -1,4 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G7 — Центр возвратов</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: transparent;
+      --panel: #4b403d;
+      --panel-2: #433936;
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.68);
+      --muted-2: rgba(255, 255, 255, 0.54);
+      --muted-3: rgba(255, 255, 255, 0.40);
+      --border: rgba(255, 255, 255, 0.11);
+      --accent: #ef6f2e;
+      --accent-2: #dd6226;
+      --success: #3fc38a;
+      --danger: #ff6d6d;
+      --r-card: 20px;
+      --r-pill: 999px;
+      --shadow-card:
+        0 14px 28px rgba(0, 0, 0, 0.30),
+        0 3px 10px rgba(0, 0, 0, 0.18);
+      --shadow-accent: 0 12px 26px rgba(239, 111, 46, 0.22);
+      --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      --tr: 180ms ease;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
+    body { padding: 14px; }
+
+    .app {
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .hidden { display: none !important; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: var(--r-pill);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted-2);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .eyebrow-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex: 0 0 auto;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(239, 111, 46, 0.10);
+    }
+
+    .top-title {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      text-align: right;
+    }
+
+    .top-title h1 {
+      margin: 0;
+      font-size: clamp(24px, 2vw, 30px);
+      line-height: 1.05;
+    }
+
+    .top-title p {
+      margin: 0;
+      color: var(--muted-2);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .panel,
+    .content-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--r-card);
+      border: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0)),
+        linear-gradient(180deg, var(--panel), var(--panel-2));
+      box-shadow: var(--shadow-card), var(--inset-top);
+    }
+
+    .panel::before,
+    .content-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 62px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+      pointer-events: none;
+    }
+
+    .sidebar {
+      padding: 14px;
+      position: sticky;
+      top: 12px;
+    }
+
+    .section {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        rgba(0, 0, 0, 0.10);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .section:last-child { margin-bottom: 0; }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted-3);
+    }
+
+    .primary-stack,
+    .tabs,
+    .choice-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .action-card,
+    .tab-btn,
+    .choice {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      cursor: pointer;
+      transition: all var(--tr);
+      font: 800 15px "Nunito", sans-serif;
+      text-align: left;
+      text-decoration: none;
+    }
+
+    .action-card:hover,
+    .tab-btn:hover,
+    .choice:hover {
+      transform: translateY(-1px);
+      border-color: rgba(239, 111, 46, 0.45);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .action-card {
+      background:
+        linear-gradient(180deg, rgba(239, 111, 46, 0.16), rgba(239, 111, 46, 0.08)),
+        rgba(255, 255, 255, 0.02);
+    }
+
+    .action-card .mini {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffcfb3;
+    }
+
+    .tab-btn.active,
+    .choice.active {
+      background:
+        linear-gradient(180deg, rgba(239, 111, 46, 0.18), rgba(239, 111, 46, 0.10)),
+        rgba(255, 255, 255, 0.03);
+      border-color: rgba(239, 111, 46, 0.75);
+      box-shadow: 0 0 0 1px rgba(239, 111, 46, 0.25) inset;
+    }
+
+    .btn,
     .btn-primary,
     .btn-secondary,
     .btn-ghost,
@@ -34,7 +260,229 @@
       transform: translateY(-1px);
       box-shadow:
         0 16px 30px rgba(239, 111, 46, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    }
 
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(239, 111, 46, 0.55);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(239, 111, 46, 0.12);
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost,
+    .toolbar-btn {
+      background: rgba(255, 255, 255, 0.03);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .btn-ghost:hover,
+    .toolbar-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(239, 111, 46, 0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-small {
+      min-height: 36px;
+      padding: 8px 14px;
+      font-size: 13px;
+    }
+
+    .toolbar-btn {
+      min-width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      padding: 0 12px;
+      font-size: 16px;
+    }
+
+    .content-head,
+    .content-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .content-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .content-head h3 {
+      margin: 0;
+      font-size: clamp(20px, 1.7vw, 22px);
+    }
+
+    .content-body { padding: 16px; }
+
+    .notice {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.03);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .notice.error {
+      color: #ffd0d0;
+      border-color: rgba(255,109,109,.35);
+      background: rgba(255,109,109,.08);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .label {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted-3);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 46px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        rgba(0, 0, 0, 0.10);
+      color: var(--text);
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      transition:
+        border-color var(--tr),
+        box-shadow var(--tr),
+        background var(--tr),
+        transform var(--tr);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.44);
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(239, 111, 46, 0.55);
+      box-shadow:
+        0 0 0 4px rgba(239, 111, 46, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+        rgba(0, 0, 0, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        rgba(0, 0, 0, 0.10);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .status-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e5dcd8;
+    }
+
+    .ok { color: var(--success); }
+    .err { color: var(--danger); }
+
+    .table-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .search-box {
+      display: grid;
+      grid-template-columns: minmax(240px, 1.4fr) 120px 120px auto auto;
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .search-box input,
+    .search-box select { min-width: 0; }
+
+    .table-wrap {
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
+        rgba(0, 0, 0, 0.10);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    table {
+      width: 100%;
+      min-width: 900px;
+      table-layout: fixed;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background:
+        linear-gradient(180deg, rgba(239, 111, 46, 0.16), rgba(239, 111, 46, 0.06)),
+        rgba(255, 255, 255, 0.02);
+    }
+
+    th,
+    td {
+      padding: 11px 10px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       text-align: left;
       vertical-align: top;
@@ -165,6 +613,7 @@
       .search-box {
         grid-template-columns: minmax(220px, 1fr) 110px 110px auto auto;
       }
+
       table { min-width: 840px; }
     }
 
@@ -172,7 +621,6 @@
       .layout { grid-template-columns: 1fr; }
       .sidebar { position: static; }
       .instruction-layout { grid-template-columns: 1fr; }
-      .hero { flex-direction: column; }
       .pdf-scroll { height: 640px; }
       .pdf-shell { min-height: 620px; }
     }
@@ -192,10 +640,6 @@
       .status-row { flex-direction: column; align-items: flex-start; }
       .pdf-scroll { height: 540px; padding: 10px; }
       .search-box { grid-template-columns: 1fr; }
-      .hero-actions { width: 100%; }
-      .hero-actions .btn,
-      .hero-actions .btn-secondary,
-      .hero-actions .btn-ghost { width: 100%; }
     }
   </style>
 </head>
@@ -248,26 +692,12 @@
         <div class="section">
           <div class="section-label">Таблица</div>
           <div class="tabs">
-            <a class="tab-btn" id="openTableExternal" href="#" target="_blank" rel="noopener noreferrer">
-              Открыть отдельно
-            </a>
+            <a class="tab-btn" id="openTableExternal" href="#" target="_blank" rel="noopener noreferrer">Открыть отдельно</a>
           </div>
         </div>
       </aside>
 
       <main>
-        <div class="hero">
-          <div class="hero-content">
-            <h2 id="heroTitle">Создать возврат</h2>
-            <p id="heroText">Короткая форма без лишних полей.</p>
-          </div>
-
-          <div class="hero-actions">
-            <button class="btn btn-ghost btn-small" id="heroAction1">Очистить форму</button>
-            <button class="btn-secondary btn-small" id="heroAction2">Открыть таблицу</button>
-          </div>
-        </div>
-
         <section class="content-card hidden" id="tab-instructions">
           <div class="content-head">
             <h3>Инструкции</h3>
@@ -311,17 +741,13 @@
                 <div class="pdf-toolbar hidden" id="pdfToolbar">
                   <div class="toolbar-group">
                     <button class="toolbar-btn" id="prevPageBtn">‹</button>
-                    <div style="font-size: 13px; color: var(--muted); font-weight: 700;">
-                      Страница <span id="pageNum">0</span> / <span id="pageCount">0</span>
-                    </div>
+                    <div style="font-size: 13px; color: var(--muted); font-weight: 700;">Страница <span id="pageNum">0</span> / <span id="pageCount">0</span></div>
                     <button class="toolbar-btn" id="nextPageBtn">›</button>
                   </div>
 
                   <div class="toolbar-group">
                     <button class="toolbar-btn" id="zoomOutBtn">−</button>
-                    <div style="font-size: 13px; color: var(--muted); font-weight: 700;">
-                      <span id="zoomValue">100%</span>
-                    </div>
+                    <div style="font-size: 13px; color: var(--muted); font-weight: 700;"><span id="zoomValue">100%</span></div>
                     <button class="toolbar-btn" id="zoomInBtn">+</button>
                     <button class="toolbar-btn" id="fitWidthBtn">↔</button>
                   </div>
@@ -406,9 +832,7 @@
 
             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
               <button class="btn-ghost btn-small" id="refreshTableBtn">Обновить</button>
-              <a class="btn-secondary btn-small" id="openTableBtnInner" href="#" target="_blank" rel="noopener noreferrer">
-                Открыть таблицу
-              </a>
+              <a class="btn-secondary btn-small" id="openTableBtnInner" href="#" target="_blank" rel="noopener noreferrer">Открыть таблицу</a>
             </div>
           </div>
 
@@ -547,13 +971,6 @@
       tracking: document.getElementById('tab-tracking')
     };
 
-    const heroTitle = document.getElementById('heroTitle');
-    const heroText = document.getElementById('heroText');
-    const heroAction1 = document.getElementById('heroAction1');
-    const heroAction2 = document.getElementById('heroAction2');
-    const openTableExternal = document.getElementById('openTableExternal');
-    const openTableBtnInner = document.getElementById('openTableBtnInner');
-
     const returnForm = document.getElementById('returnForm');
     const formStatus = document.getElementById('formStatus');
     const clearFormBtn = document.getElementById('clearFormBtn');
@@ -571,6 +988,8 @@
     const returnsTableBody = document.getElementById('returnsTableBody');
     const tableMeta = document.getElementById('tableMeta');
     const refreshTableBtn = document.getElementById('refreshTableBtn');
+    const openTableExternal = document.getElementById('openTableExternal');
+    const openTableBtnInner = document.getElementById('openTableBtnInner');
 
     const ic = {
       categoryChoices: document.getElementById('categoryChoices'),
@@ -641,51 +1060,12 @@
       });
     }
 
-    function setCreateHero() {
-      heroTitle.textContent = 'Создать возврат';
-      heroText.textContent = 'Короткая форма без лишних полей.';
-      heroAction1.textContent = 'Очистить форму';
-      heroAction1.onclick = function () { clearFormBtn.click(); };
-      heroAction2.textContent = 'Открыть таблицу';
-      heroAction2.onclick = function () { window.open(CONFIG.RETURNS_SHEET_URL, '_blank'); };
-    }
-
-    function setTrackingHero() {
-      heroTitle.textContent = 'Отследить возврат';
-      heroText.textContent = 'Последние записи и фильтры по периоду.';
-      heroAction1.textContent = 'Обновить реестр';
-      heroAction1.onclick = function () { loadReturns(); };
-      heroAction2.textContent = 'Открыть таблицу';
-      heroAction2.onclick = function () { window.open(CONFIG.RETURNS_SHEET_URL, '_blank'); };
-    }
-
-    function setInstructionsHero() {
-      heroTitle.textContent = 'Инструкции';
-      heroText.textContent = 'Выберите сценарий и откройте нужный PDF.';
-      heroAction1.textContent = 'Открыть PDF';
-      heroAction1.onclick = function () {
-        const scenario = instructionState.currentKey ? SCENARIOS[instructionState.currentKey] : null;
-        if (scenario) window.open(scenario.url, '_blank');
-      };
-      heroAction2.textContent = 'Копировать ссылку';
-      heroAction2.onclick = async function () {
-        const scenario = instructionState.currentKey ? SCENARIOS[instructionState.currentKey] : null;
-        if (!scenario) return;
-        try {
-          await navigator.clipboard.writeText(scenario.url);
-          heroText.textContent = 'Ссылка скопирована.';
-        } catch (error) {}
-      };
-    }
-
     function setTab(name) {
       activateTabsVisual(name === 'instructions' ? 'instructions' : '');
       Object.keys(sections).forEach(function (key) {
         sections[key].classList.toggle('hidden', key !== name);
       });
-      if (name === 'create') setCreateHero();
-      if (name === 'tracking') setTrackingHero();
-      if (name === 'instructions') setInstructionsHero();
+      setNotice('', false);
       localStorage.setItem('g7_returns_active_tab_v4', name);
     }
 
@@ -705,6 +1085,7 @@
         const response = await fetch(url, options || {});
         const text = await response.text();
         let data = null;
+
         try {
           data = text ? JSON.parse(text) : null;
         } catch (error) {
@@ -779,6 +1160,7 @@
         if (instructionState.logistics === 'courier') return 'exchange_courier';
         if (instructionState.logistics === 'region_tk') return 'exchange_region_tk';
       }
+
       if (instructionState.category === 'return') {
         if (instructionState.returnObject === 'product') {
           if (instructionState.logistics === 'region_tk') return 'return_region_tk';
@@ -790,6 +1172,7 @@
             if (instructionState.payment === 'legal_entity_transfer') return 'return_courier_legal_entity_transfer';
           }
         }
+
         if (instructionState.returnObject === 'gift_card') {
           if (instructionState.giftType === 'physical') return 'return_gift_card_physical';
           if (instructionState.giftType === 'electronic') {
@@ -798,34 +1181,42 @@
           }
         }
       }
+
       if (instructionState.category === 'service_quality') {
         if (instructionState.logistics === 'courier') return 'service_quality_courier';
         if (instructionState.logistics === 'region_tk') return 'service_quality_region_tk';
       }
+
       if (instructionState.category === 'service_repair') {
         if (instructionState.logistics === 'courier') return 'service_repair_courier';
         if (instructionState.logistics === 'region_tk') return 'service_repair_region_tk';
       }
+
       return '';
     }
 
     function getInstructionNeedText() {
       if (!instructionState.category) return 'Выберите сценарий слева.';
       if (instructionState.category === 'exchange' && !instructionState.logistics) return 'Уточните логистику.';
+
       if (instructionState.category === 'return') {
         if (!instructionState.returnObject) return 'Уточните объект возврата.';
+
         if (instructionState.returnObject === 'product') {
           if (!instructionState.logistics) return 'Выберите логистику.';
           if (instructionState.logistics === 'courier' && !instructionState.payment) return 'Выберите тип оплаты.';
         }
+
         if (instructionState.returnObject === 'gift_card') {
           if (!instructionState.giftType) return 'Выберите тип подарочной карты.';
           if (instructionState.giftType === 'electronic' && !instructionState.giftReason) return 'Уточните ситуацию по ЭПК.';
         }
       }
+
       if ((instructionState.category === 'service_quality' || instructionState.category === 'service_repair') && !instructionState.logistics) {
         return 'Уточните логистику.';
       }
+
       return 'Сценарий не найден.';
     }
 
@@ -841,10 +1232,12 @@
 
       if (instructionState.category === 'return') {
         show(ic.returnObjectCard);
+
         if (instructionState.returnObject === 'product') {
           show(ic.logisticsCard);
           if (instructionState.logistics === 'courier') show(ic.paymentCard);
         }
+
         if (instructionState.returnObject === 'gift_card') {
           show(ic.giftTypeCard);
           if (instructionState.giftType === 'electronic') show(ic.giftReasonCard);
@@ -874,7 +1267,7 @@
       const scenario = SCENARIOS[key];
       if (!scenario) {
         resetInstructionPreview();
-        if (!sections.instructions.classList.contains('hidden')) heroText.textContent = getInstructionNeedText();
+        if (!sections.instructions.classList.contains('hidden')) setNotice(getInstructionNeedText(), false);
         return;
       }
 
@@ -891,12 +1284,12 @@
         ic.pageCount.textContent = instructionState.pdfDoc.numPages;
         instructionState.pageNum = 1;
         await renderAllPdfPages();
-        if (!sections.instructions.classList.contains('hidden')) heroText.textContent = scenario.description;
+        if (!sections.instructions.classList.contains('hidden')) setNotice('', false);
       } catch (error) {
         console.error(error);
         instructionState.pdfDoc = null;
         resetInstructionPreview();
-        if (!sections.instructions.classList.contains('hidden')) heroText.textContent = error.message || 'Не удалось загрузить PDF.';
+        if (!sections.instructions.classList.contains('hidden')) setNotice(error.message || 'Не удалось загрузить PDF.', true);
       } finally {
         hide(ic.loadingLayer);
       }
@@ -999,7 +1392,7 @@
       }
 
       if (!resolvedKey && !sections.instructions.classList.contains('hidden')) {
-        heroText.textContent = getInstructionNeedText();
+        setNotice(getInstructionNeedText(), false);
       }
     }
 
@@ -1195,6 +1588,7 @@
         renderReturnsTable(returnsData);
         return;
       }
+
       const filtered = returnsData.filter(function (row) {
         return (
           String(row.orderNumber || '').toLowerCase().includes(query) ||
@@ -1205,12 +1599,14 @@
           String(row.returnStatus || '').toLowerCase().includes(query)
         );
       });
+
       renderReturnsTable(filtered);
     }
 
     searchReturns.addEventListener('input', applySearch);
     applyFilterBtn.addEventListener('click', loadReturns);
     refreshTableBtn.addEventListener('click', loadReturns);
+
     clearFilterBtn.addEventListener('click', function () {
       filterMonth.value = '';
       filterYear.value = '';
@@ -1235,3 +1631,5 @@
 
     init();
   </script>
+</body>
+</html>
