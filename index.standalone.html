@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>G7 — Центр возвратов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: transparent; --panel: #4b403d; --panel-2: #433936; --text: #ffffff;
+      --muted: rgba(255,255,255,.68); --muted-2: rgba(255,255,255,.54); --muted-3: rgba(255,255,255,.4);
+      --border: rgba(255,255,255,.11); --accent: #ef6f2e; --accent-2: #dd6226;
+      --success: #3fc38a; --danger: #ff6d6d; --r-card: 20px; --r-pill: 999px;
+      --shadow-card: 0 14px 28px rgba(0,0,0,.3), 0 3px 10px rgba(0,0,0,.18);
+      --shadow-accent: 0 12px 26px rgba(239,111,46,.22);
+      --inset-top: inset 0 1px 0 rgba(255,255,255,.06); --tr: 180ms ease;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: "Nunito", system-ui, sans-serif; }
+    body { padding: 14px; }
+    .app { max-width: 1600px; margin: 0 auto; }
+    .hidden { display: none !important; }
+    .topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 14px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: var(--r-pill); border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); color: var(--muted-2); font-size: 12px; font-weight: 800; line-height: 1; white-space: nowrap; }
+    .eyebrow-dot { width: 7px; height: 7px; border-radius: 50%; flex: 0 0 auto; background: var(--accent); box-shadow: 0 0 0 4px rgba(239,111,46,.1); }
+    .top-title { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; text-align: right; }
+    .top-title h1 { margin: 0; font-size: clamp(24px, 2vw, 30px); line-height: 1.05; }
+    .top-title p { margin: 0; color: var(--muted-2); font-size: 13px; font-weight: 700; }
+    .layout { display: grid; grid-template-columns: minmax(240px, 280px) minmax(0, 1fr); gap: 12px; align-items: start; }
+    .panel, .content-card { position: relative; overflow: hidden; border-radius: var(--r-card); border: 1px solid var(--border); background: linear-gradient(180deg, rgba(255,255,255,.025), transparent), linear-gradient(180deg, var(--panel), var(--panel-2)); box-shadow: var(--shadow-card), var(--inset-top); }
+    .panel::before, .content-card::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 62px; background: linear-gradient(180deg, rgba(255,255,255,.05), transparent); pointer-events: none; }
+    .sidebar { padding: 14px; position: sticky; top: 12px; }
+    .section { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; padding: 14px; border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), rgba(0,0,0,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    .section:last-child { margin-bottom: 0; }
+    .section-label { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-3); }
+    .primary-stack, .tabs, .choice-list { display: grid; gap: 10px; }
+    .action-card, .tab-btn, .choice { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); color: #fff; cursor: pointer; transition: all var(--tr); font: 800 15px "Nunito", sans-serif; text-align: left; text-decoration: none; }
+    .action-card:hover, .tab-btn:hover, .choice:hover { transform: translateY(-1px); border-color: rgba(239,111,46,.45); background: rgba(255,255,255,.05); }
+    .action-card { background: linear-gradient(180deg, rgba(239,111,46,.16), rgba(239,111,46,.08)), rgba(255,255,255,.02); }
+    .action-card .mini { display: block; margin-top: 3px; font-size: 12px; font-weight: 700; color: #ffcfb3; }
+    .tab-btn.active, .choice.active { background: linear-gradient(180deg, rgba(239,111,46,.18), rgba(239,111,46,.1)), rgba(255,255,255,.03); border-color: rgba(239,111,46,.75); box-shadow: 0 0 0 1px rgba(239,111,46,.25) inset; }
+    .btn, .btn-primary, .btn-secondary, .btn-ghost, .toolbar-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 10px 16px; border-radius: var(--r-pill); font: 800 14px "Nunito", sans-serif; cursor: pointer; transition: all var(--tr); text-decoration: none; white-space: nowrap; }
+    .btn-primary, .btn { color: #fff; background: radial-gradient(circle at 50% 0%, rgba(255,255,255,.14), transparent 38%), linear-gradient(180deg, var(--accent), var(--accent-2)); box-shadow: var(--shadow-accent), inset 0 1px 0 rgba(255,255,255,.12); border: none; }
+    .btn-primary:hover, .btn:hover { transform: translateY(-1px); box-shadow: 0 16px 30px rgba(239,111,46,.28), inset 0 1px 0 rgba(255,255,255,.14); }
+    .btn-secondary { background: transparent; color: var(--accent); border: 1px solid rgba(239,111,46,.55); }
+    .btn-secondary:hover { background: rgba(239,111,46,.12); color: #fff; transform: translateY(-1px); }
+    .btn-ghost, .toolbar-btn { background: rgba(255,255,255,.03); color: #fff; border: 1px solid rgba(255,255,255,.08); }
+    .btn-ghost:hover, .toolbar-btn:hover { background: rgba(255,255,255,.05); border-color: rgba(239,111,46,.45); transform: translateY(-1px); }
+    .btn-small { min-height: 36px; padding: 8px 14px; font-size: 13px; }
+    .toolbar-btn { min-width: 40px; height: 40px; border-radius: 12px; padding: 0 12px; font-size: 16px; }
+    .content-head, .content-body { position: relative; z-index: 1; }
+    .content-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+    .content-head h3 { margin: 0; font-size: clamp(20px, 1.7vw, 22px); }
+    .content-body { padding: 16px; }
+    .notice { margin-bottom: 12px; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.03); font-size: 13px; font-weight: 700; color: var(--muted); }
+    .notice.error { color: #ffd0d0; border-color: rgba(255,109,109,.35); background: rgba(255,109,109,.08); }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .form-section { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 14px; padding: 14px; border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), rgba(0,0,0,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    .form-section-title { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-3); }
+    .form-section-hint { font-size: 13px; font-weight: 700; color: var(--muted-2); line-height: 1.45; margin: 4px 0 0; }
+    .form-section-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field-hint { font-size: 12px; font-weight: 700; color: var(--muted-3); line-height: 1.4; }
+    .label { font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--muted-3); }
+    input, select, textarea { width: 100%; min-height: 46px; padding: 11px 13px; border-radius: 12px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), rgba(0,0,0,.1); color: var(--text); outline: none; font-family: inherit; font-size: 14px; font-weight: 700; transition: border-color var(--tr), box-shadow var(--tr), background var(--tr), transform var(--tr); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    textarea { min-height: 110px; resize: vertical; }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,.44); }
+    input:focus, select:focus, textarea:focus { border-color: rgba(239,111,46,.55); box-shadow: 0 0 0 4px rgba(239,111,46,.08), inset 0 1px 0 rgba(255,255,255,.03); background: linear-gradient(180deg, rgba(255,255,255,.03), transparent), rgba(0,0,0,.14); transform: translateY(-1px); }
+    .status-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), rgba(0,0,0,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    .status-text { font-size: 14px; font-weight: 700; color: #e5dcd8; }
+    .ok { color: var(--success); } .err { color: var(--danger); }
+    .table-tools { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .search-box { display: grid; grid-template-columns: minmax(240px, 1.4fr) 120px 120px auto auto; gap: 10px; align-items: center; width: 100%; min-width: 0; }
+    .search-box input, .search-box select { min-width: 0; }
+    .table-wrap { overflow: auto; border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), rgba(0,0,0,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
+    table { width: 100%; min-width: 900px; table-layout: fixed; border-collapse: collapse; }
+    thead { background: linear-gradient(180deg, rgba(239,111,46,.16), rgba(239,111,46,.06)), rgba(255,255,255,.02); }
+    th, td { padding: 11px 10px; border-bottom: 1px solid rgba(255,255,255,.06); text-align: left; vertical-align: top; }
+    th { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #ffbf98; }
+    td { font-size: 14px; color: #f2ece9; word-break: break-word; overflow-wrap: anywhere; }
+    tr:hover td { background: rgba(255,255,255,.02); }
+    .pill { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 800; line-height: 1.1; }
+    .pill.new { background: rgba(239,111,46,.16); color: #ffbf98; }
+    .pill.progress { background: rgba(77,163,255,.16); color: #8bc1ff; }
+    .pill.done { background: rgba(63,195,138,.16); color: #90e6bb; }
+    .pill.cancel { background: rgba(255,0,0,.16); color: #ff8b8b; }
+    .pill.neutral { background: rgba(255,255,255,.1); color: #e5dcd8; }
+    .instruction-layout { display: grid; grid-template-columns: minmax(220px, 260px) minmax(0, 1fr); gap: 12px; }
+    .pdf-shell { position: relative; min-height: 740px; overflow: hidden; border-radius: 18px; border: 1px solid rgba(255,255,255,.08); background: #1d1918; }
+    .pdf-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.08); background: #2a2422; }
+    .toolbar-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .pdf-scroll { height: 780px; overflow: auto; padding: 14px; background: #2b2624; }
+    .pdf-pages { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+    .pdf-page { display: block; max-width: 100%; background: #fff; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    .empty { min-height: 720px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 30px; color: #c1b6b0; line-height: 1.6; }
+    .empty-title { margin-bottom: 8px; font-size: 24px; font-weight: 800; color: #fff4ef; }
+    .loading { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; background: rgba(29,25,24,.72); backdrop-filter: blur(2px); font-size: 16px; font-weight: 800; color: #fff4ef; }
+    @media (max-width: 1320px) { .search-box { grid-template-columns: minmax(220px, 1fr) 110px 110px auto auto; } table { min-width: 840px; } }
+    @media (max-width: 1120px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static; } .instruction-layout { grid-template-columns: 1fr; } .pdf-scroll { height: 640px; } .pdf-shell { min-height: 620px; } }
+    @media (max-width: 860px) { .search-box { grid-template-columns: 1fr 1fr; } .search-box input { grid-column: 1 / -1; } .form-section-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) { body { padding: 10px; } .topbar { flex-direction: column; align-items: flex-start; } .top-title { align-items: flex-start; text-align: left; } .top-title h1 { font-size: 22px; } .form-grid { grid-template-columns: 1fr; } .content-head, .status-row { flex-direction: column; align-items: flex-start; } .pdf-scroll { height: 540px; padding: 10px; } .search-box { grid-template-columns: 1fr; } }
+  
+    .notice.warning { margin: 0; color: #ffcfb3; border-color: rgba(239,111,46,.45); background: rgba(239,111,46,.12); }
+    .form-section-grid .full-width { grid-column: 1 / -1; }
+    select { appearance: none; background-image: linear-gradient(180deg, rgba(255,255,255,.02), transparent), linear-gradient(45deg, transparent 50%, #ef6f2e 50%), linear-gradient(135deg, #ef6f2e 50%, transparent 50%), rgba(0,0,0,.1); background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 14px) 50%, calc(100% - 10px) 50%, 0 0; background-size: 100% 100%, 5px 5px, 5px 5px, 100% 100%; background-repeat: no-repeat; padding-right: 36px; cursor: pointer; }
+    select option { background: #2a2422; color: #fff; }
+    * { scrollbar-width: thin; scrollbar-color: #ef6f2e #2a2422; }
+    *::-webkit-scrollbar { width: 10px; height: 10px; }
+    *::-webkit-scrollbar-track { background: #2a2422; border-radius: 10px; }
+    *::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #ef6f2e, #dd6226); border-radius: 10px; border: 2px solid #2a2422; }
+    *::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #f27a3a, #ef6f2e); }
+
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="eyebrow"><span class="eyebrow-dot"></span><span>G7</span></div>
+      <div class="top-title"><h1>Клиентский центр</h1><p>Возвраты и инструкции</p></div>
+    </div>
+    <div id="networkNotice" class="notice hidden" role="alert"></div>
+    <div class="layout">
+      <aside class="panel sidebar">
+        <div class="section">
+          <div class="section-label">Основные действия</div>
+          <div class="primary-stack">
+            <button type="button" class="action-card" data-tab="create"><span>Создать возврат<span class="mini">Новая заявка</span></span><span aria-hidden="true">→</span></button>
+            <button type="button" class="action-card" data-tab="tracking"><span>Отследить возврат<span class="mini">Реестр заявок</span></span><span aria-hidden="true">→</span></button>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-label">Дополнительно</div>
+          <div class="tabs"><button type="button" class="tab-btn" data-tab="instructions">Инструкции</button></div>
+        </div>
+        <div class="section">
+          <div class="section-label">Таблица</div>
+          <div class="tabs"><a class="tab-btn" id="openTableExternal" href="#" target="_blank" rel="noopener noreferrer">Открыть отдельно</a></div>
+        </div>
+      </aside>
+      <main>
+        <section class="content-card hidden" id="tab-instructions" aria-hidden="true">
+          <div class="content-head"><h3>Инструкции</h3></div>
+          <div class="content-body">
+            <div class="instruction-layout">
+              <div>
+                <div class="section" style="margin-bottom:12px"><div class="section-label">Тип обращения</div><div class="choice-list" id="categoryChoices"></div></div>
+                <div class="section hidden" id="returnObjectCard" style="margin-bottom:12px"><div class="section-label">Что возвращаем</div><div class="choice-list" id="returnObjectChoices"></div></div>
+                <div class="section hidden" id="logisticsCard" style="margin-bottom:12px"><div class="section-label">Логистика</div><div class="choice-list" id="logisticsChoices"></div></div>
+                <div class="section hidden" id="paymentCard" style="margin-bottom:12px"><div class="section-label">Тип оплаты</div><div class="choice-list" id="paymentChoices"></div></div>
+                <div class="section hidden" id="giftTypeCard" style="margin-bottom:12px"><div class="section-label">Тип подарочной карты</div><div class="choice-list" id="giftTypeChoices"></div></div>
+                <div class="section hidden" id="giftReasonCard"><div class="section-label">Ситуация по ЭПК</div><div class="choice-list" id="giftReasonChoices"></div></div>
+              </div>
+              <div class="pdf-shell">
+                <div class="pdf-toolbar hidden" id="pdfToolbar">
+                  <div class="toolbar-group">
+                    <button type="button" class="toolbar-btn" id="prevPageBtn">‹</button>
+                    <div style="font-size:13px;color:var(--muted);font-weight:700">Страница <span id="pageNum">0</span> / <span id="pageCount">0</span></div>
+                    <button type="button" class="toolbar-btn" id="nextPageBtn">›</button>
+                  </div>
+                  <div class="toolbar-group">
+                    <button type="button" class="toolbar-btn" id="zoomOutBtn">−</button>
+                    <div style="font-size:13px;color:var(--muted);font-weight:700"><span id="zoomValue">100%</span></div>
+                    <button type="button" class="toolbar-btn" id="zoomInBtn">+</button>
+                    <button type="button" class="toolbar-btn" id="fitWidthBtn">→</button>
+                  </div>
+                </div>
+                <div class="loading hidden" id="loadingLayer">Загружаем PDF…</div>
+                <div class="empty" id="emptyState"><div><div class="empty-title">Инструкция появится здесь</div><div>Выберите сценарий слева.</div></div></div>
+                <div class="pdf-scroll hidden" id="pdfScroll"><div class="pdf-pages" id="pdfPages"></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="content-card" id="tab-create">
+          <div class="content-head"><h3>Создать возврат</h3></div>
+          <div class="content-body">
+            <form id="returnForm" novalidate>
+              <div class="form-grid">
+                <div class="field">
+                  <label class="label" for="employeeName">ФИО сотрудника</label>
+                  <input id="employeeName" name="employeeName" type="text" placeholder="Например: Примеров П.П." required />
+                </div>
+                <div class="field">
+                  <label class="label" for="orderNumber">Номер заказа</label>
+                  <input id="orderNumber" name="orderNumber" type="text" inputmode="numeric" placeholder="Например: 22398621" required />
+                  <span class="field-hint">Основной заказ заявки (колонка «Заказ» в таблице).</span>
+                </div>
+                <div class="form-section">
+                  <div class="form-section-title">Логистика</div>
+                  <p class="form-section-hint" id="logisticsHint">Выберите тип ситуации.</p>
+                  <div class="form-section-grid">
+                    <div class="field full">
+                      <label class="label" for="deliveryType">Тип</label>
+                      <select id="deliveryType" name="deliveryType" required>
+                        <option value="">Выберите тип</option>
+                        <option value="Наша доставка">Наша доставка</option>
+                        <option value="Доставка ТК">Доставка ТК</option>
+                        <option value="Заказ не выполнен">Заказ не выполнен</option>
+                      </select>
+                    </div>
+                    <div id="deliveryWarning" class="notice warning hidden full-width" role="status">Внимание: возврат выполняется только после того, как мы получили товар от клиента.</div>
+                    <div class="field hidden" id="pickupOrderField">
+                      <label class="label" for="pickupOrderNumber">Заказ, по которому забрали</label>
+                      <input id="pickupOrderNumber" name="pickupOrderNumber" type="text" inputmode="numeric" placeholder="Номер заказа забора" />
+                    </div>
+                    <div class="field hidden" id="returnOrderField">
+                      <label class="label" for="returnOrderNumber">Заказ, по которому возвращаем</label>
+                      <input id="returnOrderNumber" name="returnOrderNumber" type="text" inputmode="numeric" placeholder="Номер заказа возврата" />
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label" for="returnType">Тип возврата</label>
+                  <select id="returnType" name="returnType" required>
+                    <option value="">Выберите вариант</option>
+                    <option value="Полный">Полный</option>
+                    <option value="Частичный">Частичный</option>
+                  </select>
+                </div>
+                <div class="field hidden" id="refundAmountField">
+                  <label class="label" for="refundAmount">Сумма возврата</label>
+                  <input id="refundAmount" name="refundAmount" type="text" inputmode="decimal" placeholder="Только цифры" pattern="[0-9]+([.,][0-9]{1,2})?" />
+                </div>
+                <div class="field full hidden" id="positionsField">
+                  <label class="label" for="positions">Позиции к возврату</label>
+                  <textarea id="positions" name="positions" placeholder="Название позиции и количество"></textarea>
+                </div>
+                <div class="field full">
+                  <label class="label" for="comment">Комментарий сотрудника</label>
+                  <textarea id="comment" name="comment" placeholder="Дополнительно: возвратный заказ, особенности"></textarea>
+                  <span class="field-hint">Тип и номера заказов автоматически добавятся в комментарий в таблице.</span>
+                </div>
+              </div>
+              <div class="status-row">
+                <div class="status-text" id="formStatus" role="status">Заполните форму и отправьте заявку.</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap">
+                  <button class="btn-ghost" type="button" id="clearFormBtn">Очистить</button>
+                  <button class="btn-primary" type="submit" id="submitReturnBtn">Создать возврат</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+        <section class="content-card hidden" id="tab-tracking" aria-hidden="true">
+          <div class="content-head">
+            <h3>Отследить возврат</h3>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" class="btn-ghost btn-small" id="refreshTableBtn">Обновить</button>
+              <a class="btn-secondary btn-small" id="openTableBtnInner" href="#" target="_blank" rel="noopener noreferrer">Открыть таблицу</a>
+            </div>
+          </div>
+          <div class="content-body">
+            <div class="table-tools">
+              <div class="search-box">
+                <input id="searchReturns" type="search" placeholder="Поиск по заказу, сотруднику, позиции, сумме или комментарию" />
+                <select id="filterMonth" aria-label="Месяц">
+                  <option value="">Месяц</option>
+                  <option value="1">Янв</option><option value="2">Фев</option><option value="3">Мар</option>
+                  <option value="4">Апр</option><option value="5">Май</option><option value="6">Июн</option>
+                  <option value="7">Июл</option><option value="8">Авг</option><option value="9">Сен</option>
+                  <option value="10">Окт</option><option value="11">Ноя</option><option value="12">Дек</option>
+                </select>
+                <select id="filterYear" aria-label="Год"></select>
+                <button class="btn-ghost btn-small" id="applyFilterBtn" type="button">Применить</button>
+                <button class="btn-ghost btn-small" id="clearFilterBtn" type="button">Сбросить</button>
+              </div>
+              <div style="font-size:13px;color:var(--muted)" id="tableMeta">Записей: 0</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:14%">Дата</th><th style="width:14%">Сотрудник</th><th style="width:11%">Заказ</th>
+                    <th style="width:10%">Тип</th><th style="width:12%">Статус</th><th style="width:10%">Сумма</th>
+                    <th style="width:12%">Позиции</th><th style="width:17%">Комментарий</th>
+                  </tr>
+                </thead>
+                <tbody id="returnsTableBody"><tr><td colspan="8" style="color:var(--muted)">Загрузка данных…</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script>
+const CONFIG = {
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyi6JGaqNvwMWZXS5eLKzIXp-NacimlIb2QI289_lfOIAl6YadtRq3E1nYgSLakhNAb/exec',
+  RETURNS_SHEET_URL: 'https://docs.google.com/spreadsheets/d/1wJFMO690kzUVDzcJiJCrH3fi448ojdnZi07bRZjj5Aw/edit?gid=59196493#gid=59196493',
+  INSTRUCTION_BASE_URL: 'https://mhtbolnovisgdliphsmf.supabase.co/storage/v1/object/public/Instruction/',
+  PDFJS_URL: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.min.mjs',
+  PDFJS_WORKER_URL: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@4.4.168/build/pdf.worker.min.mjs',
+  STORAGE_TAB: 'g7_returns_active_tab_v5',
+  STORAGE_FILTER_MONTH: 'g7_returns_filter_month',
+  STORAGE_FILTER_YEAR: 'g7_returns_filter_year'
+};
+
+const DELIVERY = {
+  OUR: 'Наша доставка',
+  TK: 'Доставка ТК',
+  NOT_FULFILLED: 'Заказ не выполнен'
+};
+
+const DELIVERY_WITH_TWO_ORDERS = [DELIVERY.OUR, DELIVERY.TK];
+
+const DATA = {
+  category: [
+    { value: 'exchange', label: 'Обмен' },
+    { value: 'return', label: 'Возврат' },
+    { value: 'service_quality', label: 'Проверка качества' },
+    { value: 'service_repair', label: 'Ремонт по гарантии' }
+  ],
+  returnObject: [
+    { value: 'product', label: 'Товар' },
+    { value: 'gift_card', label: 'Подарочная карта' }
+  ],
+  logistics: [
+    { value: 'courier', label: 'Наша доставка / курьер' },
+    { value: 'region_tk', label: 'Регион / доставка ТК' }
+  ],
+  payment: [
+    { value: 'online', label: 'Оплата онлайн' },
+    { value: 'on_delivery', label: 'Оплата при получении' },
+    { value: 'e_gift_card', label: 'Оплачено ЭПК' },
+    { value: 'physical_gift_card_plus_extra', label: 'Физическая ПК + доплата' },
+    { value: 'legal_entity_transfer', label: 'Юр. лицо / безнал' }
+  ],
+  giftType: [
+    { value: 'physical', label: 'Физическая подарочная карта' },
+    { value: 'electronic', label: 'Электронная подарочная карта' }
+  ],
+  giftReason: [
+    { value: 'recipient_request', label: 'Возврат по запросу получателя' },
+    { value: 'partial_refund', label: 'Частичный возврат / неполное отоваривание' }
+  ]
+};
+
+const SCENARIOS = {
+  exchange_courier: { file: 'exchange_product_courier.pdf' },
+  exchange_region_tk: { file: 'exchange_product_region_transport_company.pdf' },
+  return_courier_online: { file: 'return_product_online_payment_courier.pdf' },
+  return_courier_on_delivery: { file: 'return_product_cash_or_card_on_delivery_courier.pdf' },
+  return_courier_e_gift_card: { file: 'return_product_e_gift_card_courier.pdf' },
+  return_courier_physical_gift_card_plus_extra: { file: 'return_product_physical_gift_card_plus_extra_payment_courier.pdf' },
+  return_courier_legal_entity_transfer: { file: 'return_product_bank_transfer_legal_entity_courier.pdf' },
+  return_region_tk: { file: 'return_product_region_transport_company.pdf' },
+  return_gift_card_physical: { file: 'return_gift_card_physical_refund.pdf' },
+  return_gift_card_electronic_recipient_request: { file: 'return_e_gift_card_recipient_request.pdf' },
+  return_gift_card_electronic_partial: { file: 'return_e_gift_card_partial_refund.pdf' },
+  service_quality_courier: { file: 'service_quality_check_courier_pickup.pdf' },
+  service_quality_region_tk: { file: 'service_quality_check_region_transport_company.pdf' },
+  service_repair_courier: { file: 'service_warranty_repair_courier_pickup.pdf' },
+  service_repair_region_tk: { file: 'service_warranty_repair_region_transport_company.pdf' }
+};
+
+Object.keys(SCENARIOS).forEach(function (key) {
+  SCENARIOS[key].url = CONFIG.INSTRUCTION_BASE_URL + SCENARIOS[key].file;
+});
+
+const $ = function (id) { return document.getElementById(id); };
+
+const topActionCards = document.querySelectorAll('.action-card[data-tab]');
+const navTabs = document.querySelectorAll('.tab-btn[data-tab]');
+const networkNotice = $('networkNotice');
+
+const sections = {
+  instructions: $('tab-instructions'),
+  create: $('tab-create'),
+  tracking: $('tab-tracking')
+};
+
+const returnForm = $('returnForm');
+const formStatus = $('formStatus');
+const clearFormBtn = $('clearFormBtn');
+const deliveryTypeSelect = $('deliveryType');
+const logisticsHint = $('logisticsHint');
+const deliveryWarning = $('deliveryWarning');
+const pickupOrderField = $('pickupOrderField');
+const returnOrderField = $('returnOrderField');
+const orderNumberInput = $('orderNumber');
+const pickupOrderInput = $('pickupOrderNumber');
+const returnOrderInput = $('returnOrderNumber');
+const returnTypeSelect = $('returnType');
+const refundAmountField = $('refundAmountField');
+const positionsField = $('positionsField');
+const refundAmountInput = $('refundAmount');
+const positionsInput = $('positions');
+
+const searchReturns = $('searchReturns');
+const filterMonth = $('filterMonth');
+const filterYear = $('filterYear');
+const applyFilterBtn = $('applyFilterBtn');
+const clearFilterBtn = $('clearFilterBtn');
+const returnsTableBody = $('returnsTableBody');
+const tableMeta = $('tableMeta');
+const refreshTableBtn = $('refreshTableBtn');
+const openTableExternal = $('openTableExternal');
+const openTableBtnInner = $('openTableBtnInner');
+
+const ic = {
+  categoryChoices: $('categoryChoices'),
+  returnObjectCard: $('returnObjectCard'),
+  returnObjectChoices: $('returnObjectChoices'),
+  logisticsCard: $('logisticsCard'),
+  logisticsChoices: $('logisticsChoices'),
+  paymentCard: $('paymentCard'),
+  paymentChoices: $('paymentChoices'),
+  giftTypeCard: $('giftTypeCard'),
+  giftTypeChoices: $('giftTypeChoices'),
+  giftReasonCard: $('giftReasonCard'),
+  giftReasonChoices: $('giftReasonChoices'),
+  pdfToolbar: $('pdfToolbar'),
+  prevPageBtn: $('prevPageBtn'),
+  nextPageBtn: $('nextPageBtn'),
+  zoomOutBtn: $('zoomOutBtn'),
+  zoomInBtn: $('zoomInBtn'),
+  fitWidthBtn: $('fitWidthBtn'),
+  pageNum: $('pageNum'),
+  pageCount: $('pageCount'),
+  zoomValue: $('zoomValue'),
+  loadingLayer: $('loadingLayer'),
+  emptyState: $('emptyState'),
+  pdfScroll: $('pdfScroll'),
+  pdfPages: $('pdfPages')
+};
+
+const instructionState = {
+  category: '',
+  returnObject: '',
+  logistics: '',
+  payment: '',
+  giftType: '',
+  giftReason: '',
+  currentKey: '',
+  pdfDoc: null,
+  scale: 1,
+  pageNum: 1,
+  fitWidth: true
+};
+
+const runtime = { pdfjsLib: null, pdfReady: false, pdfLoadError: '', observer: null };
+let returnsData = [];
+let returnsLoaded = false;
+let returnsLoading = false;
+let returnsFetchPromise = null;
+const RETURNS_CACHE_MS = 90000;
+let returnsCacheTime = 0;
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function trim(value) { return String(value || '').trim(); }
+function show(node) { node.classList.remove('hidden'); }
+function hide(node) { node.classList.add('hidden'); }
+
+function setNotice(message, isError) {
+  if (!message) {
+    networkNotice.className = 'notice hidden';
+    networkNotice.textContent = '';
+    return;
+  }
+  networkNotice.textContent = message;
+  networkNotice.className = 'notice' + (isError ? ' error' : '');
+}
+
+function activateTabsVisual(name) {
+  navTabs.forEach(function (btn) {
+    btn.classList.toggle('active', btn.dataset.tab === name);
+  });
+}
+
+function setTab(name) {
+  const tab = sections[name] ? name : 'create';
+  activateTabsVisual(tab === 'instructions' ? 'instructions' : tab === 'tracking' ? 'tracking' : '');
+  Object.keys(sections).forEach(function (key) {
+    const active = key === tab;
+    sections[key].classList.toggle('hidden', !active);
+    sections[key].setAttribute('aria-hidden', active ? 'false' : 'true');
+  });
+  setNotice('', false);
+  localStorage.setItem(CONFIG.STORAGE_TAB, tab);
+  if (tab === 'tracking') ensureReturnsLoaded();
+  if (tab === 'instructions' && !instructionState.currentKey) {
+    updateInstructionUI();
+  }
+}
+
+topActionCards.forEach(function (btn) {
+  btn.addEventListener('click', function () { setTab(btn.dataset.tab); });
+});
+
+navTabs.forEach(function (btn) {
+  btn.addEventListener('click', function () { setTab(btn.dataset.tab); });
+});
+
+openTableExternal.href = CONFIG.RETURNS_SHEET_URL;
+openTableBtnInner.href = CONFIG.RETURNS_SHEET_URL;
+
+function requiresTwoOrders(deliveryType) {
+  return DELIVERY_WITH_TWO_ORDERS.includes(deliveryType);
+}
+
+function setFieldRequired(input, required) {
+  if (!input) return;
+  if (required) input.setAttribute('required', 'required');
+  else input.removeAttribute('required');
+}
+
+function toggleDeliveryFields() {
+  const deliveryType = deliveryTypeSelect.value;
+
+  setFieldRequired(orderNumberInput, true);
+  hide(pickupOrderField);
+  hide(returnOrderField);
+  hide(deliveryWarning);
+  setFieldRequired(pickupOrderInput, false);
+  setFieldRequired(returnOrderInput, false);
+
+  if (!deliveryType) {
+    logisticsHint.textContent = 'Выберите тип ситуации. Номер заказа указывается всегда; для доставки и ТК — дополнительно заказы забора и возврата (в комментарий).';
+    pickupOrderInput.value = '';
+    returnOrderInput.value = '';
+    return;
+  }
+
+  if (requiresTwoOrders(deliveryType)) {
+    show(pickupOrderField);
+    show(returnOrderField);
+    show(deliveryWarning);
+    setFieldRequired(pickupOrderInput, true);
+    setFieldRequired(returnOrderInput, true);
+    logisticsHint.textContent = 'Номер заказа — основной заказ заявки. Заказы «забрали» и «возврат» попадут только в комментарий в таблице.';
+    return;
+  }
+
+  pickupOrderInput.value = '';
+  returnOrderInput.value = '';
+  logisticsHint.textContent = 'Укажите номер заказа и тип ситуации «Заказ не выполнен».';
+}
+
+function buildSheetComment(deliveryType, pickupOrder, returnOrder, userComment) {
+  const lines = ['--- Логистика ---', 'Тип: ' + deliveryType];
+  if (requiresTwoOrders(deliveryType)) {
+    lines.push('Заказ (забрали): ' + pickupOrder);
+    lines.push('Заказ (возврат): ' + returnOrder);
+  }
+  const commentText = trim(userComment);
+  if (commentText) {
+    lines.push('', '--- Комментарий сотрудника ---', commentText);
+  }
+  return lines.join('\n');
+}
+
+function validateReturnForm() {
+  const deliveryType = deliveryTypeSelect.value;
+  if (!trim(orderNumberInput.value)) return 'Укажите номер заказа.';
+  if (!deliveryType) return 'Выберите тип логистики.';
+  if (requiresTwoOrders(deliveryType)) {
+    if (!trim(pickupOrderInput.value)) return 'Укажите заказ, по которому забрали.';
+    if (!trim(returnOrderInput.value)) return 'Укажите заказ, по которому возвращаем.';
+    if (trim(pickupOrderInput.value) === trim(returnOrderInput.value)) {
+      return 'Номера заказов «забрали» и «возврат» не должны совпадать.';
+    }
+  }
+  if (returnTypeSelect.value === 'Частичный') {
+    const amount = trim(refundAmountInput.value);
+    if (!amount) return 'Укажите сумму возврата для частичного возврата.';
+    if (!/^[0-9]+([.,][0-9]{1,2})?$/.test(amount)) {
+      return 'Сумма: только цифры, можно с копейками через точку или запятую.';
+    }
+    if (!trim(positionsInput.value)) return 'Укажите позиции к возврату.';
+  }
+  return '';
+}
+
+async function safeFetchJson(url, options) {
+  try {
+    const response = await fetch(url, options || {});
+    const text = await response.text();
+    let data = null;
+    try {
+      data = text ? JSON.parse(text) : null;
+    } catch (error) {
+      throw new Error('Сервер вернул не JSON.');
+    }
+    if (!response.ok) {
+      throw new Error((data && (data.error || data.message)) || ('HTTP ' + response.status));
+    }
+    return data;
+  } catch (error) {
+    if (error && error.name === 'TypeError') {
+      throw new Error('Не удалось подключиться к удалённому серверу. Проверьте CORS, Apps Script и соединение.');
+    }
+    throw error;
+  }
+}
+
+async function loadPdfJs() {
+  if (runtime.pdfReady) return runtime.pdfjsLib;
+  if (runtime.pdfLoadError) throw new Error(runtime.pdfLoadError);
+  try {
+    const module = await import(CONFIG.PDFJS_URL);
+    module.GlobalWorkerOptions.workerSrc = CONFIG.PDFJS_WORKER_URL;
+    runtime.pdfjsLib = module;
+    runtime.pdfReady = true;
+    return module;
+  } catch (error) {
+    runtime.pdfLoadError = 'Не удалось загрузить PDF.js. Проверьте доступ к CDN.';
+    throw new Error(runtime.pdfLoadError);
+  }
+}
+
+function renderButtons(container, items, stateKey) {
+  container.innerHTML = '';
+  items.forEach(function (item) {
+    const btn = document.createElement('button');
+    btn.className = 'choice' + (instructionState[stateKey] === item.value ? ' active' : '');
+    btn.type = 'button';
+    btn.textContent = item.label;
+    btn.addEventListener('click', function () { setInstructionState(stateKey, item.value); });
+    container.appendChild(btn);
+  });
+}
+
+function setInstructionState(key, value) {
+  instructionState[key] = value;
+  if (key === 'category') {
+    instructionState.returnObject = '';
+    instructionState.logistics = '';
+    instructionState.payment = '';
+    instructionState.giftType = '';
+    instructionState.giftReason = '';
+  }
+  if (key === 'returnObject') {
+    instructionState.logistics = '';
+    instructionState.payment = '';
+    instructionState.giftType = '';
+    instructionState.giftReason = '';
+  }
+  if (key === 'logistics') instructionState.payment = '';
+  if (key === 'giftType') instructionState.giftReason = '';
+  updateInstructionUI();
+}
+
+function resolveInstructionKey() {
+  if (instructionState.category === 'exchange') {
+    if (instructionState.logistics === 'courier') return 'exchange_courier';
+    if (instructionState.logistics === 'region_tk') return 'exchange_region_tk';
+  }
+  if (instructionState.category === 'return') {
+    if (instructionState.returnObject === 'product') {
+      if (instructionState.logistics === 'region_tk') return 'return_region_tk';
+      if (instructionState.logistics === 'courier') {
+        if (instructionState.payment === 'online') return 'return_courier_online';
+        if (instructionState.payment === 'on_delivery') return 'return_courier_on_delivery';
+        if (instructionState.payment === 'e_gift_card') return 'return_courier_e_gift_card';
+        if (instructionState.payment === 'physical_gift_card_plus_extra') return 'return_courier_physical_gift_card_plus_extra';
+        if (instructionState.payment === 'legal_entity_transfer') return 'return_courier_legal_entity_transfer';
+      }
+    }
+    if (instructionState.returnObject === 'gift_card') {
+      if (instructionState.giftType === 'physical') return 'return_gift_card_physical';
+      if (instructionState.giftType === 'electronic') {
+        if (instructionState.giftReason === 'recipient_request') return 'return_gift_card_electronic_recipient_request';
+        if (instructionState.giftReason === 'partial_refund') return 'return_gift_card_electronic_partial';
+      }
+    }
+  }
+  if (instructionState.category === 'service_quality') {
+    if (instructionState.logistics === 'courier') return 'service_quality_courier';
+    if (instructionState.logistics === 'region_tk') return 'service_quality_region_tk';
+  }
+  if (instructionState.category === 'service_repair') {
+    if (instructionState.logistics === 'courier') return 'service_repair_courier';
+    if (instructionState.logistics === 'region_tk') return 'service_repair_region_tk';
+  }
+  return '';
+}
+
+function getInstructionNeedText() {
+  if (!instructionState.category) return 'Выберите сценарий слева.';
+  if (instructionState.category === 'exchange' && !instructionState.logistics) return 'Уточните логистику.';
+  if (instructionState.category === 'return') {
+    if (!instructionState.returnObject) return 'Уточните объект возврата.';
+    if (instructionState.returnObject === 'product') {
+      if (!instructionState.logistics) return 'Выберите логистику.';
+      if (instructionState.logistics === 'courier' && !instructionState.payment) return 'Выберите тип оплаты.';
+    }
+    if (instructionState.returnObject === 'gift_card') {
+      if (!instructionState.giftType) return 'Выберите тип подарочной карты.';
+      if (instructionState.giftType === 'electronic' && !instructionState.giftReason) return 'Уточните ситуацию по ЭПК.';
+    }
+  }
+  if ((instructionState.category === 'service_quality' || instructionState.category === 'service_repair') && !instructionState.logistics) {
+    return 'Уточните логистику.';
+  }
+  return 'Сценарий не найден.';
+}
+
+function toggleInstructionCards() {
+  hide(ic.returnObjectCard);
+  hide(ic.logisticsCard);
+  hide(ic.paymentCard);
+  hide(ic.giftTypeCard);
+  hide(ic.giftReasonCard);
+  if (!instructionState.category) return;
+  if (instructionState.category === 'exchange') show(ic.logisticsCard);
+  if (instructionState.category === 'return') {
+    show(ic.returnObjectCard);
+    if (instructionState.returnObject === 'product') {
+      show(ic.logisticsCard);
+      if (instructionState.logistics === 'courier') show(ic.paymentCard);
+    }
+    if (instructionState.returnObject === 'gift_card') {
+      show(ic.giftTypeCard);
+      if (instructionState.giftType === 'electronic') show(ic.giftReasonCard);
+    }
+  }
+  if (instructionState.category === 'service_quality' || instructionState.category === 'service_repair') {
+    show(ic.logisticsCard);
+  }
+}
+
+function resetInstructionPreview() {
+  show(ic.emptyState);
+  hide(ic.pdfToolbar);
+  hide(ic.pdfScroll);
+  ic.pdfPages.innerHTML = '';
+  ic.pageNum.textContent = '0';
+  ic.pageCount.textContent = '0';
+  ic.zoomValue.textContent = '100%';
+  if (runtime.observer) { runtime.observer.disconnect(); runtime.observer = null; }
+}
+
+async function loadInstructionPdf(key) {
+  const scenario = SCENARIOS[key];
+  if (!scenario) {
+    resetInstructionPreview();
+    if (!sections.instructions.classList.contains('hidden')) setNotice(getInstructionNeedText(), false);
+    return;
+  }
+  show(ic.loadingLayer);
+  hide(ic.emptyState);
+  show(ic.pdfToolbar);
+  show(ic.pdfScroll);
+  ic.pdfPages.innerHTML = '';
+  try {
+    const pdfjsLib = await loadPdfJs();
+    const loadingTask = pdfjsLib.getDocument({ url: scenario.url, withCredentials: false });
+    instructionState.pdfDoc = await loadingTask.promise;
+    ic.pageCount.textContent = instructionState.pdfDoc.numPages;
+    instructionState.pageNum = 1;
+    await renderAllPdfPages();
+    if (!sections.instructions.classList.contains('hidden')) setNotice('', false);
+  } catch (error) {
+    console.error(error);
+    instructionState.pdfDoc = null;
+    resetInstructionPreview();
+    if (!sections.instructions.classList.contains('hidden')) setNotice(error.message || 'Не удалось загрузить PDF.', true);
+  } finally {
+    hide(ic.loadingLayer);
+  }
+}
+
+async function renderAllPdfPages() {
+  if (!instructionState.pdfDoc) return;
+  ic.pdfPages.innerHTML = '';
+  const scrollWidth = ic.pdfScroll.clientWidth - 28;
+  const firstPage = await instructionState.pdfDoc.getPage(1);
+  const firstViewport = firstPage.getViewport({ scale: 1 });
+  let scale = instructionState.scale;
+  if (instructionState.fitWidth) {
+    scale = Math.max(0.5, scrollWidth / firstViewport.width);
+    instructionState.scale = scale;
+  }
+  ic.zoomValue.textContent = Math.round(scale * 100) + '%';
+  for (let i = 1; i <= instructionState.pdfDoc.numPages; i += 1) {
+    const page = await instructionState.pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale: scale });
+    const canvas = document.createElement('canvas');
+    canvas.className = 'pdf-page';
+    const context = canvas.getContext('2d', { alpha: false });
+    canvas.width = Math.floor(viewport.width * window.devicePixelRatio);
+    canvas.height = Math.floor(viewport.height * window.devicePixelRatio);
+    canvas.style.width = Math.floor(viewport.width) + 'px';
+    canvas.style.height = Math.floor(viewport.height) + 'px';
+    const wrapper = document.createElement('div');
+    wrapper.dataset.page = i;
+    wrapper.appendChild(canvas);
+    ic.pdfPages.appendChild(wrapper);
+    await page.render({
+      canvasContext: context,
+      viewport: viewport,
+      transform: [window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0]
+    }).promise;
+  }
+  observePdfPages();
+  updatePdfIndicator();
+}
+
+function observePdfPages() {
+  if (runtime.observer) runtime.observer.disconnect();
+  const pageWrappers = Array.from(ic.pdfPages.querySelectorAll('div[data-page]'));
+  runtime.observer = new IntersectionObserver(function (entries) {
+    const visibleEntry = entries
+      .filter(function (entry) { return entry.isIntersecting; })
+      .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; })[0];
+    if (visibleEntry) {
+      instructionState.pageNum = Number(visibleEntry.target.dataset.page);
+      updatePdfIndicator();
+    }
+  }, { root: ic.pdfScroll, threshold: [0.25, 0.5, 0.75] });
+  pageWrappers.forEach(function (wrapper) { runtime.observer.observe(wrapper); });
+}
+
+function updatePdfIndicator() {
+  ic.pageNum.textContent = String(instructionState.pageNum || 1);
+  ic.pageCount.textContent = String(instructionState.pdfDoc?.numPages || 0);
+}
+
+function scrollToPdfPage(pageNum) {
+  const target = ic.pdfPages.querySelector('div[data-page="' + pageNum + '"]');
+  if (!target) return;
+  target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  instructionState.pageNum = pageNum;
+  updatePdfIndicator();
+}
+
+async function updateInstructionUI() {
+  renderButtons(ic.categoryChoices, DATA.category, 'category');
+  renderButtons(ic.returnObjectChoices, DATA.returnObject, 'returnObject');
+  renderButtons(ic.logisticsChoices, DATA.logistics, 'logistics');
+  renderButtons(ic.paymentChoices, DATA.payment, 'payment');
+  renderButtons(ic.giftTypeChoices, DATA.giftType, 'giftType');
+  renderButtons(ic.giftReasonChoices, DATA.giftReason, 'giftReason');
+  toggleInstructionCards();
+  const resolvedKey = resolveInstructionKey();
+  if (resolvedKey !== instructionState.currentKey) {
+    instructionState.currentKey = resolvedKey;
+    if (resolvedKey) await loadInstructionPdf(resolvedKey);
+    else resetInstructionPreview();
+  }
+  if (!resolvedKey && !sections.instructions.classList.contains('hidden')) {
+    setNotice(getInstructionNeedText(), false);
+  }
+}
+
+ic.prevPageBtn.addEventListener('click', function () {
+  if (!instructionState.pdfDoc) return;
+  scrollToPdfPage(Math.max(1, instructionState.pageNum - 1));
+});
+ic.nextPageBtn.addEventListener('click', function () {
+  if (!instructionState.pdfDoc) return;
+  scrollToPdfPage(Math.min(instructionState.pdfDoc.numPages, instructionState.pageNum + 1));
+});
+ic.zoomInBtn.addEventListener('click', async function () {
+  if (!instructionState.pdfDoc) return;
+  instructionState.fitWidth = false;
+  instructionState.scale = Math.min(3, +(instructionState.scale + 0.15).toFixed(2));
+  show(ic.loadingLayer);
+  await renderAllPdfPages();
+  hide(ic.loadingLayer);
+  scrollToPdfPage(instructionState.pageNum);
+});
+ic.zoomOutBtn.addEventListener('click', async function () {
+  if (!instructionState.pdfDoc) return;
+  instructionState.fitWidth = false;
+  instructionState.scale = Math.max(0.5, +(instructionState.scale - 0.15).toFixed(2));
+  show(ic.loadingLayer);
+  await renderAllPdfPages();
+  hide(ic.loadingLayer);
+  scrollToPdfPage(instructionState.pageNum);
+});
+ic.fitWidthBtn.addEventListener('click', async function () {
+  if (!instructionState.pdfDoc) return;
+  instructionState.fitWidth = true;
+  show(ic.loadingLayer);
+  await renderAllPdfPages();
+  hide(ic.loadingLayer);
+  scrollToPdfPage(instructionState.pageNum);
+});
+window.addEventListener('resize', async function () {
+  if (instructionState.pdfDoc && instructionState.fitWidth) {
+    show(ic.loadingLayer);
+    await renderAllPdfPages();
+    hide(ic.loadingLayer);
+    scrollToPdfPage(instructionState.pageNum);
+  }
+});
+
+function toggleReturnFields() {
+  const type = returnTypeSelect.value;
+  if (type === 'Частичный') {
+    show(refundAmountField);
+    show(positionsField);
+    setFieldRequired(refundAmountInput, true);
+    setFieldRequired(positionsInput, true);
+  } else {
+    hide(refundAmountField);
+    hide(positionsField);
+    setFieldRequired(refundAmountInput, false);
+    setFieldRequired(positionsInput, false);
+    refundAmountInput.value = '';
+    positionsInput.value = '';
+  }
+}
+
+deliveryTypeSelect.addEventListener('change', toggleDeliveryFields);
+returnTypeSelect.addEventListener('change', toggleReturnFields);
+
+clearFormBtn.addEventListener('click', function () {
+  returnForm.reset();
+  toggleDeliveryFields();
+  toggleReturnFields();
+  formStatus.textContent = 'Форма очищена.';
+  formStatus.className = 'status-text';
+});
+
+returnForm.addEventListener('submit', async function (event) {
+  event.preventDefault();
+  const validationError = validateReturnForm();
+  if (validationError) {
+    formStatus.textContent = validationError;
+    formStatus.className = 'status-text err';
+    return;
+  }
+  const submitButton = $('submitReturnBtn');
+  const formData = new FormData(returnForm);
+  const deliveryType = formData.get('deliveryType') || '';
+  const orderNumber = trim(formData.get('orderNumber'));
+  const pickupOrder = trim(formData.get('pickupOrderNumber'));
+  const returnOrder = trim(formData.get('returnOrderNumber'));
+  const userComment = formData.get('comment') || '';
+  const payload = {
+    employeeName: trim(formData.get('employeeName')),
+    orderNumber: orderNumber,
+    returnType: formData.get('returnType') || '',
+    refundAmount: trim(formData.get('refundAmount')).replace(',', '.'),
+    positions: trim(formData.get('positions')),
+    comment: buildSheetComment(deliveryType, pickupOrder, returnOrder, userComment),
+    createdAt: new Date().toISOString()
+  };
+  submitButton.disabled = true;
+  submitButton.textContent = 'Отправляем…';
+  formStatus.textContent = 'Создаём возврат…';
+  formStatus.className = 'status-text';
+  try {
+    const json = await safeFetchJson(CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'createReturnLegacy', payload: payload })
+    });
+    if (!json.ok) throw new Error(json.error || 'Не удалось создать возврат.');
+    formStatus.textContent = 'Возврат создан.';
+    formStatus.className = 'status-text ok';
+    returnForm.reset();
+    toggleDeliveryFields();
+    toggleReturnFields();
+    await loadReturns({ force: true });
+    setTab('tracking');
+  } catch (error) {
+    console.error(error);
+    formStatus.textContent = error.message || 'Ошибка при создании возврата.';
+    formStatus.className = 'status-text err';
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Создать возврат';
+  }
+});
+
+function initYearFilter() {
+  const currentYear = new Date().getFullYear();
+  filterYear.innerHTML = '<option value="">Год</option>';
+  for (let year = currentYear + 1; year >= currentYear - 3; year -= 1) {
+    const option = document.createElement('option');
+    option.value = String(year);
+    option.textContent = String(year);
+    filterYear.appendChild(option);
+  }
+}
+
+function initFilters() {
+  initYearFilter();
+  const savedMonth = localStorage.getItem(CONFIG.STORAGE_FILTER_MONTH);
+  const savedYear = localStorage.getItem(CONFIG.STORAGE_FILTER_YEAR);
+  const now = new Date();
+  filterMonth.value = savedMonth || String(now.getMonth() + 1);
+  filterYear.value = savedYear || String(now.getFullYear());
+}
+
+function statusPill(status) {
+  const normalized = String(status || '').toLowerCase();
+  if (normalized.includes('произведен возврат')) return '<span class="pill done">' + escapeHtml(status) + '</span>';
+  if (normalized.includes('нов')) return '<span class="pill new">' + escapeHtml(status || 'Новая') + '</span>';
+  if (normalized.includes('работ')) return '<span class="pill progress">' + escapeHtml(status) + '</span>';
+  if (normalized.includes('заверш')) return '<span class="pill done">' + escapeHtml(status) + '</span>';
+  if (normalized.includes('отмен') || normalized.includes('отказ')) return '<span class="pill cancel">' + escapeHtml(status) + '</span>';
+  return '<span class="pill neutral">' + escapeHtml(status || '—') + '</span>';
+}
+
+function renderReturnsTable(data) {
+  if (!data.length) {
+    returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Записей пока нет.</td></tr>';
+    tableMeta.textContent = 'Записей: 0';
+    return;
+  }
+  returnsTableBody.innerHTML = data.map(function (row) {
+    return '<tr>' +
+      '<td>' + escapeHtml(row.createdAt) + '</td>' +
+      '<td>' + escapeHtml(row.employeeName) + '</td>' +
+      '<td>' + escapeHtml(row.orderNumber) + '</td>' +
+      '<td>' + escapeHtml(row.returnType) + '</td>' +
+      '<td>' + statusPill(row.returnStatus) + '</td>' +
+      '<td>' + escapeHtml(row.refundAmount) + '</td>' +
+      '<td>' + escapeHtml(row.positions) + '</td>' +
+      '<td>' + escapeHtml(row.comment) + '</td>' +
+    '</tr>';
+  }).join('');
+  tableMeta.textContent = 'Записей: ' + data.length;
+}
+
+function isReturnsCacheFresh() {
+  return returnsLoaded && (Date.now() - returnsCacheTime) < RETURNS_CACHE_MS;
+}
+
+function ensureReturnsLoaded(options) {
+  if (isReturnsCacheFresh() && !(options && options.force)) {
+    applySearch();
+    return Promise.resolve();
+  }
+  return loadReturns(options);
+}
+
+async function loadReturns(options) {
+  const opts = options || {};
+  const force = !!opts.force;
+  const silent = !!opts.silent;
+
+  if (returnsLoading && returnsFetchPromise && !force) {
+    return returnsFetchPromise;
+  }
+
+  if (!silent && !isReturnsCacheFresh()) {
+    returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:var(--muted)">Загрузка данных…</td></tr>';
+  }
+
+  returnsLoading = true;
+  returnsFetchPromise = (async function () {
+    try {
+      const month = filterMonth.value;
+      const year = filterYear.value;
+      localStorage.setItem(CONFIG.STORAGE_FILTER_MONTH, month);
+      localStorage.setItem(CONFIG.STORAGE_FILTER_YEAR, year);
+      let url = CONFIG.APPS_SCRIPT_URL + '?action=listReturnsLegacy';
+      if (month && year) {
+        url += '&month=' + encodeURIComponent(month) + '&year=' + encodeURIComponent(year);
+      }
+      const json = await safeFetchJson(url);
+      if (!json.ok) throw new Error(json.error || 'Ошибка загрузки');
+      returnsData = Array.isArray(json.rows) ? json.rows : [];
+      returnsLoaded = true;
+      returnsCacheTime = Date.now();
+      applySearch();
+      if (!sections.tracking.classList.contains('hidden')) setNotice('', false);
+    } catch (error) {
+      console.error(error);
+      returnsData = [];
+      returnsLoaded = false;
+      if (!sections.tracking.classList.contains('hidden')) {
+        returnsTableBody.innerHTML = '<tr><td colspan="8" style="color:#ff8a8a">' + escapeHtml(error.message || 'Не удалось загрузить данные.') + '</td></tr>';
+        tableMeta.textContent = 'Записей: 0';
+        setNotice(error.message || 'Не удалось загрузить данные из реестра.', true);
+      }
+    } finally {
+      returnsLoading = false;
+      returnsFetchPromise = null;
+    }
+  })();
+
+  return returnsFetchPromise;
+}
+
+function applySearch() {
+  const query = searchReturns.value.trim().toLowerCase();
+  if (!query) { renderReturnsTable(returnsData); return; }
+  const filtered = returnsData.filter(function (row) {
+    return (
+      String(row.orderNumber || '').toLowerCase().includes(query) ||
+      String(row.employeeName || '').toLowerCase().includes(query) ||
+      String(row.positions || '').toLowerCase().includes(query) ||
+      String(row.refundAmount || '').toLowerCase().includes(query) ||
+      String(row.comment || '').toLowerCase().includes(query) ||
+      String(row.returnStatus || '').toLowerCase().includes(query) ||
+      String(row.returnType || '').toLowerCase().includes(query)
+    );
+  });
+  renderReturnsTable(filtered);
+}
+
+searchReturns.addEventListener('input', applySearch);
+applyFilterBtn.addEventListener('click', function () { loadReturns({ force: true }); });
+refreshTableBtn.addEventListener('click', function () { loadReturns({ force: true }); });
+clearFilterBtn.addEventListener('click', function () {
+  filterMonth.value = '';
+  filterYear.value = '';
+  localStorage.removeItem(CONFIG.STORAGE_FILTER_MONTH);
+  localStorage.removeItem(CONFIG.STORAGE_FILTER_YEAR);
+  loadReturns({ force: true });
+});
+
+async function init() {
+  try {
+    const savedTab = localStorage.getItem(CONFIG.STORAGE_TAB);
+    toggleDeliveryFields();
+    toggleReturnFields();
+    initFilters();
+    setTab(savedTab || 'create');
+    loadReturns({ silent: true });
+    if (savedTab === 'instructions') await updateInstructionUI();
+  } catch (error) {
+    console.error(error);
+    setNotice((error && error.message) || 'Произошла ошибка инициализации.', true);
+  }
+}
+
+init();
+
+</script>
+</body>
+</html>
