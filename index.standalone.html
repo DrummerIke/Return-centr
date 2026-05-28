@@ -67,6 +67,7 @@
     .label { font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--muted-3); }
     input, select, textarea { width: 100%; min-height: 46px; padding: 11px 13px; border-radius: 12px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), rgba(0,0,0,.1); color: var(--text); outline: none; font-family: inherit; font-size: 14px; font-weight: 700; transition: border-color var(--tr), box-shadow var(--tr), background var(--tr), transform var(--tr); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
     textarea { min-height: 110px; resize: vertical; }
+    #comment { min-height: 72px; }
     input::placeholder, textarea::placeholder { color: rgba(255,255,255,.44); }
     input:focus, select:focus, textarea:focus { border-color: rgba(239,111,46,.55); box-shadow: 0 0 0 4px rgba(239,111,46,.08), inset 0 1px 0 rgba(255,255,255,.03); background: linear-gradient(180deg, rgba(255,255,255,.03), transparent), rgba(0,0,0,.14); transform: translateY(-1px); }
     .status-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; padding: 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,.08); background: linear-gradient(180deg, rgba(255,255,255,.02), transparent), rgba(0,0,0,.1); box-shadow: inset 0 1px 0 rgba(255,255,255,.03); }
@@ -102,7 +103,7 @@
     @media (max-width: 1120px) { .layout { grid-template-columns: 1fr; } .sidebar { position: static; } .instruction-layout { grid-template-columns: 1fr; } .pdf-scroll { height: 640px; } .pdf-shell { min-height: 620px; } }
     @media (max-width: 860px) { .search-box { grid-template-columns: 1fr 1fr; } .search-box input { grid-column: 1 / -1; } .form-section-grid { grid-template-columns: 1fr; } }
     @media (max-width: 760px) { body { padding: 10px; } .topbar { flex-direction: column; align-items: flex-start; } .top-title { align-items: flex-start; text-align: left; } .top-title h1 { font-size: 22px; } .form-grid { grid-template-columns: 1fr; } .content-head, .status-row { flex-direction: column; align-items: flex-start; } .pdf-scroll { height: 540px; padding: 10px; } .search-box { grid-template-columns: 1fr; } }
-  
+
     .notice.warning { margin: 0; color: #ffcfb3; border-color: rgba(239,111,46,.45); background: rgba(239,111,46,.12); }
     .form-section-grid .full-width { grid-column: 1 / -1; }
     select { appearance: none; background-image: linear-gradient(180deg, rgba(255,255,255,.02), transparent), linear-gradient(45deg, transparent 50%, #ef6f2e 50%), linear-gradient(135deg, #ef6f2e 50%, transparent 50%), rgba(0,0,0,.1); background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 14px) 50%, calc(100% - 10px) 50%, 0 0; background-size: 100% 100%, 5px 5px, 5px 5px, 100% 100%; background-repeat: no-repeat; padding-right: 36px; cursor: pointer; }
@@ -164,7 +165,7 @@
                     <button type="button" class="toolbar-btn" id="zoomOutBtn">−</button>
                     <div style="font-size:13px;color:var(--muted);font-weight:700"><span id="zoomValue">100%</span></div>
                     <button type="button" class="toolbar-btn" id="zoomInBtn">+</button>
-                    <button type="button" class="toolbar-btn" id="fitWidthBtn">→</button>
+                    <button type="button" class="toolbar-btn" id="openInstructionBtn" title="Открыть инструкцию отдельно" aria-label="Открыть инструкцию отдельно">→</button>
                   </div>
                 </div>
                 <div class="loading hidden" id="loadingLayer">Загружаем PDF…</div>
@@ -230,7 +231,7 @@
                 </div>
                 <div class="field full">
                   <label class="label" for="comment">Комментарий сотрудника</label>
-                  <textarea id="comment" name="comment" placeholder="Дополнительно: возвратный заказ, особенности"></textarea>
+                  <textarea id="comment" name="comment" placeholder="Дополнительно"></textarea>
                   <span class="field-hint">Тип и номера заказов автоматически добавятся в комментарий в таблице.</span>
                 </div>
               </div>
@@ -375,6 +376,7 @@ const sections = {
 const returnForm = $('returnForm');
 const formStatus = $('formStatus');
 const clearFormBtn = $('clearFormBtn');
+const employeeNameInput = $('employeeName');
 const deliveryTypeSelect = $('deliveryType');
 const logisticsHint = $('logisticsHint');
 const deliveryWarning = $('deliveryWarning');
@@ -417,7 +419,7 @@ const ic = {
   nextPageBtn: $('nextPageBtn'),
   zoomOutBtn: $('zoomOutBtn'),
   zoomInBtn: $('zoomInBtn'),
-  fitWidthBtn: $('fitWidthBtn'),
+  openInstructionBtn: $('openInstructionBtn'),
   pageNum: $('pageNum'),
   pageCount: $('pageCount'),
   zoomValue: $('zoomValue'),
@@ -458,6 +460,24 @@ function escapeHtml(value) {
 function trim(value) { return String(value || '').trim(); }
 function show(node) { node.classList.remove('hidden'); }
 function hide(node) { node.classList.add('hidden'); }
+
+function padDatePart(value) {
+  return String(value).padStart(2, '0');
+}
+
+function formatDateTime(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return [
+    padDatePart(date.getDate()),
+    padDatePart(date.getMonth() + 1),
+    date.getFullYear()
+  ].join('-') + ' ' + [
+    padDatePart(date.getHours()),
+    padDatePart(date.getMinutes())
+  ].join('-');
+}
 
 function setNotice(message, isError) {
   if (!message) {
@@ -559,8 +579,10 @@ function buildSheetComment(deliveryType, pickupOrder, returnOrder, userComment) 
 
 function validateReturnForm() {
   const deliveryType = deliveryTypeSelect.value;
+  if (!trim(employeeNameInput.value)) return 'Укажите ФИО сотрудника.';
   if (!trim(orderNumberInput.value)) return 'Укажите номер заказа.';
   if (!deliveryType) return 'Выберите тип логистики.';
+  if (!returnTypeSelect.value) return 'Выберите тип возврата.';
   if (requiresTwoOrders(deliveryType)) {
     if (!trim(pickupOrderInput.value)) return 'Укажите заказ, по которому забрали.';
     if (!trim(returnOrderInput.value)) return 'Укажите заказ, по которому возвращаем.';
@@ -807,14 +829,8 @@ async function renderAllPdfPages() {
 function observePdfPages() {
   if (runtime.observer) runtime.observer.disconnect();
   const pageWrappers = Array.from(ic.pdfPages.querySelectorAll('div[data-page]'));
-  runtime.observer = new IntersectionObserver(function (entries) {
-    const visibleEntry = entries
-      .filter(function (entry) { return entry.isIntersecting; })
-      .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; })[0];
-    if (visibleEntry) {
-      instructionState.pageNum = Number(visibleEntry.target.dataset.page);
-      updatePdfIndicator();
-    }
+  runtime.observer = new IntersectionObserver(function () {
+    window.requestAnimationFrame(syncPdfPageIndicator);
   }, { root: ic.pdfScroll, threshold: [0.25, 0.5, 0.75] });
   pageWrappers.forEach(function (wrapper) { runtime.observer.observe(wrapper); });
 }
@@ -822,6 +838,26 @@ function observePdfPages() {
 function updatePdfIndicator() {
   ic.pageNum.textContent = String(instructionState.pageNum || 1);
   ic.pageCount.textContent = String(instructionState.pdfDoc?.numPages || 0);
+}
+
+function getCurrentPdfPageFromScroll() {
+  if (!instructionState.pdfDoc) return 1;
+  const wrappers = Array.from(ic.pdfPages.querySelectorAll('div[data-page]'));
+  if (!wrappers.length) return 1;
+  const viewportMiddle = ic.pdfScroll.scrollTop + (ic.pdfScroll.clientHeight / 2);
+  return wrappers.reduce(function (best, wrapper) {
+    const wrapperMiddle = wrapper.offsetTop + (wrapper.offsetHeight / 2);
+    const distance = Math.abs(wrapperMiddle - viewportMiddle);
+    return distance < best.distance ? { page: Number(wrapper.dataset.page), distance: distance } : best;
+  }, { page: 1, distance: Infinity }).page;
+}
+
+function syncPdfPageIndicator() {
+  const page = getCurrentPdfPageFromScroll();
+  if (page !== instructionState.pageNum) {
+    instructionState.pageNum = page;
+    updatePdfIndicator();
+  }
 }
 
 function scrollToPdfPage(pageNum) {
@@ -877,13 +913,14 @@ ic.zoomOutBtn.addEventListener('click', async function () {
   hide(ic.loadingLayer);
   scrollToPdfPage(instructionState.pageNum);
 });
-ic.fitWidthBtn.addEventListener('click', async function () {
-  if (!instructionState.pdfDoc) return;
-  instructionState.fitWidth = true;
-  show(ic.loadingLayer);
-  await renderAllPdfPages();
-  hide(ic.loadingLayer);
-  scrollToPdfPage(instructionState.pageNum);
+ic.openInstructionBtn.addEventListener('click', function () {
+  const scenario = SCENARIOS[instructionState.currentKey];
+  if (!scenario) return;
+  window.open(scenario.url, '_blank', 'noopener,noreferrer');
+});
+
+ic.pdfScroll.addEventListener('scroll', function () {
+  window.requestAnimationFrame(syncPdfPageIndicator);
 });
 window.addEventListener('resize', async function () {
   if (instructionState.pdfDoc && instructionState.fitWidth) {
@@ -1012,7 +1049,7 @@ function renderReturnsTable(data) {
   }
   returnsTableBody.innerHTML = data.map(function (row) {
     return '<tr>' +
-      '<td>' + escapeHtml(row.createdAt) + '</td>' +
+      '<td>' + escapeHtml(formatDateTime(row.createdAt)) + '</td>' +
       '<td>' + escapeHtml(row.employeeName) + '</td>' +
       '<td>' + escapeHtml(row.orderNumber) + '</td>' +
       '<td>' + escapeHtml(row.returnType) + '</td>' +
